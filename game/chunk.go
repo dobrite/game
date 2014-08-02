@@ -11,7 +11,7 @@ type chunk struct {
 }
 
 type wireChunk struct {
-	M []int `json:"m"`
+	M []materialType `json:"m"`
 }
 
 func (c *chunk) buildChunk() *chunk {
@@ -49,11 +49,11 @@ func (c *chunk) buildChunk() *chunk {
 //	return cl
 //}
 
-func (c *chunk) toArray() []int {
-	var arr [Chunk_y * Chunk_x]int
+func (c *chunk) toArray() []materialType {
+	var arr [Chunk_y * Chunk_x]materialType
 	for y := 0; y < Chunk_y; y++ {
 		for x := 0; x < Chunk_x; x++ {
-			arr[(y*Chunk_y)+x] = materials[c.a[y][x][0]].type_
+			arr[(y*Chunk_y)+x] = materials[c.a[y][x][0]].materialType
 		}
 	}
 	return arr[:]

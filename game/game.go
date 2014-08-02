@@ -7,6 +7,17 @@ import (
 	"math/rand"
 )
 
+var positions positionsMap
+var materials materialsMap
+var entities []entity
+
+type Game struct {
+	positionsMap
+	materialsMap
+	movable
+	strategy
+}
+
 func newUUID() entity {
 	u4, err := uuid.NewV4()
 	if err != nil {
@@ -23,33 +34,24 @@ func coinFlip() bool {
 	}
 }
 
-func makeTile(x int, y int, t int) entity {
+func makeTile(x int, y int, t materialType) entity {
 	ent := newUUID()
 
-	positions[ent] = position{
-		x: x,
-		y: y,
-		z: default_depth,
-	}
-
-	materials[ent] = material{
-		type_: t,
-	}
+	positions.add(ent, x, y)
+	materials.add(ent, t)
 
 	return ent
 }
 
-// TODO turn this into init?
-func initialize() {
-	positions = make(map[entity]position)
-	materials = make(map[entity]material)
-	entities = make([]entity, 2000000)
+func init() {
+	positions = make(positionsMap)
+	materials = make(materialsMap)
+	entities = make([]entity, 200000)
 }
 
 func (g *Game) Init() {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
-	initialize()
 	w.buildWorld()
 
 	wc := &wireConfig{

@@ -18,6 +18,7 @@ func newRegistry() *registry {
 	registry := &registry{
 		sessionIds: mapset.NewThreadUnsafeSet(),
 		sessions:   make(map[string]*session),
+		command:    make(chan func()),
 	}
 	registry.t.Go(registry.run)
 	return registry

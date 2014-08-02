@@ -1,11 +1,13 @@
 package game
 
-type position struct {
-	x int
-	y int
-	z int
+import (
+	"github.com/nu7hatch/gouuid"
+)
+
+type entity struct {
+	*uuid.UUID
 }
 
-type material struct {
-	type_ int
+type component interface {
+	run()
 }

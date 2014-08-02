@@ -6,11 +6,28 @@ import (
 	"net/http"
 )
 
-type handler struct {
+type Handler struct {
 	*registry
 }
 
-func (h *handler) websocket(w http.ResponseWriter, req *http.Request) {
+func NewServeMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	h := &Handler{
+		registry: newRegistry(),
+	}
+	mux.HandleFunc("/sock/", h.Websocket)
+	mux.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
+	mux.HandleFunc("/", IndexHandler)
+
+	return mux
+}
+
+func IndexHandler(w http.ResponseWriter, req *http.Request) {
+	log.Println("index")
+	http.ServeFile(w, req, "./public/index.html")
+}
+
+func (h *Handler) Websocket(w http.ResponseWriter, req *http.Request) {
 	log.Println("websocket connected")
 	if req.Method != "GET" {
 		http.Error(w, "Method not allowed", 405)
@@ -24,7 +41,7 @@ func (h *handler) websocket(w http.ResponseWriter, req *http.Request) {
 	h.handle(newWebsocketTransport(ws))
 }
 
-func (h *handler) handle(transport transport) {
+func (h *Handler) handle(transport transport) {
 	toGame := make(chan string)
 	toConn := make(chan string)
 	u4, err := uuid.NewV4()
@@ -40,7 +57,7 @@ func (h *handler) handle(transport transport) {
 	go h.listen(session)
 }
 
-func (h *handler) listen(session *session) {
+func (h *Handler) listen(session *session) {
 	for {
 		if raw, ok := <-session.toGame; ok {
 			msg, err := MessageUnmarshalJSON([]byte(raw))
@@ -58,17 +75,17 @@ func (h *handler) listen(session *session) {
 	h.teardown(session)
 }
 
-func (h *handler) teardown(session *session) {
+func (h *Handler) teardown(session *session) {
 	log.Printf("client disconnected: %s", session.id)
 	h.registry.remove(session)
 }
 
-func (h *handler) handleMessage(msg message, session *session) {
+func (h *Handler) handleMessage(msg message, session *session) {
 	switch msg := msg.(type) {
 	case messageMove:
 		log.Println("message move " + msg.Direction)
-		h.registry.subscribe(msg, session)
-		h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))
+		//h.registry.subscribe(msg, session)
+		//h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))
 	default:
 		log.Fatal("I give up")
 	}
