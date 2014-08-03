@@ -31,24 +31,6 @@ func (c *chunk) buildChunk() *chunk {
 	return c
 }
 
-//func (c *chunk) toProto() *game.Col {
-//	var col [chunk_y]*game.Row
-//	for y := 0; y < chunk_y; y++ {
-//		var row [chunk_x]int32
-//		for x := 0; x < chunk_x; x++ {
-//			row[x] = materials[c[y][x][0]].type_
-//		}
-//		r := &game.Row{
-//			X: row[:],
-//		}
-//		col[y] = r
-//	}
-//	cl := &game.Col{
-//		Rows: col[:],
-//	}
-//	return cl
-//}
-
 func (c *chunk) toArray() []materialType {
 	var arr [Chunk_y * Chunk_x]materialType
 	for y := 0; y < Chunk_y; y++ {

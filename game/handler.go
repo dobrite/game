@@ -49,11 +49,17 @@ func (h *Handler) handle(transport transport) {
 		log.Println(err)
 		return
 	}
-	id := u4.String()
+	id := u4
 	log.Printf("client connected: %s", id)
 	session := newSession(id, transport, toConn, toGame)
 	h.registry.add(session)
-	h.registry.send(session, buildMessageConfig())
+	h.registry.send(session, buildMessageConfig(id))
+	h.registry.send(session, buildMessageWorld())
+	p := position{
+		x: 8,
+		y: 8,
+	}
+	positions[id] = p
 	go h.listen(session)
 }
 
@@ -81,9 +87,15 @@ func (h *Handler) teardown(session *session) {
 }
 
 func (h *Handler) handleMessage(msg message, session *session) {
-	switch msg := msg.(type) {
+	id := msg.id
+	switch msg := msg.message.(type) {
 	case messageMove:
-		log.Println("message move " + msg.Direction)
+		p := positions[id]
+		positions[id] = position{
+			x: p.x + msg.X,
+			y: p.y + msg.Y,
+		}
+		h.registry.publish(buildMessageWorld())
 		//h.registry.subscribe(msg, session)
 		//h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))
 	default:

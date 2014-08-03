@@ -1,7 +1,6 @@
 package game
 
 import (
-	"encoding/json"
 	"github.com/nu7hatch/gouuid"
 	"log"
 	"math/rand"
@@ -23,7 +22,7 @@ func newUUID() entity {
 	if err != nil {
 		panic("uuid failed")
 	}
-	return entity{u4}
+	return u4
 }
 
 func coinFlip() bool {
@@ -43,6 +42,9 @@ func makeTile(x int, y int, t materialType) entity {
 	return ent
 }
 
+func pump() {
+}
+
 func init() {
 	positions = make(positionsMap)
 	materials = make(materialsMap)
@@ -53,14 +55,4 @@ func (g *Game) Init() {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
 	w.buildWorld()
-
-	wc := &wireConfig{
-		Chunk_x: Chunk_x,
-		Chunk_y: Chunk_y,
-	}
-
-	c, _ := json.Marshal(wc)
-	log.Println(string(c))
-	j, _ := json.Marshal(w[0][0])
-	log.Println(string(j))
 }

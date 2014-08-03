@@ -3,27 +3,45 @@ package game
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/nu7hatch/gouuid"
 )
 
-type message interface{}
+type message struct {
+	id      entity
+	message interface{}
+}
 
 type messageEvent struct {
 	Event string          `json:"event"`
+	Id    string          `json:"id"`
 	Data  json.RawMessage `json:"data"`
 }
 
 type messageMove struct {
-	Direction string `json:"dir"`
+	Y int `json:"y"`
+	X int `json:"x"`
 }
 
-func buildMessageConfig() string {
+func buildMessageConfig(id entity) string {
 	wc := &wireConfig{
+		Event:   "game:config",
 		Chunk_x: Chunk_x,
 		Chunk_y: Chunk_y,
+		Id:      id,
 	}
 
 	c, _ := json.Marshal(wc)
 	return string(c)
+}
+
+func buildMessageWorld() string {
+	ww := &wireWorld{
+		Event: "game:world",
+		Data:  w[0][0],
+	}
+
+	w, _ := json.Marshal(ww)
+	return string(w)
 }
 
 func MessageUnmarshalJSON(b []byte) (msg message, err error) {
@@ -36,7 +54,18 @@ func MessageUnmarshalJSON(b []byte) (msg message, err error) {
 	case "game:move":
 		var msgMove messageMove
 		err = json.Unmarshal(event.Data, &msgMove)
-		msg = msgMove
+		if err != nil {
+			return
+		}
+		var u4 *uuid.UUID
+		u4, err = uuid.ParseHex(event.Id)
+		if err != nil {
+			return
+		}
+		msg = message{
+			message: msgMove,
+			id:      u4,
+		}
 	default:
 		err = fmt.Errorf("%s is not a recognized event", event.Event)
 	}

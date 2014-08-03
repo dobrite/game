@@ -4,10 +4,10 @@ import ()
 
 type session struct {
 	*connection
-	id string
+	id entity
 }
 
-func newSession(id string, transport transport, toConn chan string, toGame chan string) *session {
+func newSession(id entity, transport transport, toConn chan string, toGame chan string) *session {
 	conn := &connection{
 		trans:  transport,
 		toConn: toConn,

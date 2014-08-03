@@ -9,7 +9,7 @@ import (
 
 type registry struct {
 	sessionIds mapset.Set
-	sessions   map[string]*session
+	sessions   map[entity]*session
 	command    chan func()
 	t          tomb.Tomb
 }
@@ -17,7 +17,7 @@ type registry struct {
 func newRegistry() *registry {
 	registry := &registry{
 		sessionIds: mapset.NewThreadUnsafeSet(),
-		sessions:   make(map[string]*session),
+		sessions:   make(map[entity]*session),
 		command:    make(chan func()),
 	}
 	registry.t.Go(registry.run)
@@ -40,7 +40,7 @@ func (r *registry) publish(payload string) {
 		s := r.sessionIds.Iter()
 		for sId := range s {
 			// whole server can be blocked by a slow client
-			r.sessions[sId.(string)].toConn <- payload
+			r.sessions[sId.(entity)].toConn <- payload
 		}
 	}
 }
