@@ -51,6 +51,21 @@ function isoItem(backgroundColor, borderColor, w, h) {
   };
 }
 
+function makeTileTexture(bgColor, brColor, w, h) {
+  var graphics = new PIXI.Graphics();
+  var h_2 = h/2;
+
+  graphics.beginFill(backgroundColor);
+  graphics.lineStyle(1, borderColor, 1);
+  graphics.moveTo(x, y);
+  graphics.lineTo(x + w, y + h_2);
+  graphics.lineTo(x, y + h);
+  graphics.lineTo(x - w, y + h_2);
+  graphics.lineTo(x , y);
+  graphics.endFill();
+
+}
+
 // tiles
 var grass = isoTile(0x80CF5A, 0x339900, TILE_WIDTH, TILE_HEIGHT);
 var dirt = isoTile(0x96712F, 0x403014, TILE_WIDTH, TILE_HEIGHT);
