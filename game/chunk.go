@@ -52,7 +52,7 @@ func (c *chunk) allItems() []item {
 	var ret []item
 	ents := materials.byType(flesh)
 	for _, e := range ents {
-		position := positions[e]
+		position := positions[e.String()]
 		i := item{
 			Coords:       [2]int{position.y, position.x},
 			materialType: flesh,

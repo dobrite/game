@@ -48,7 +48,7 @@ func (h *Handler) handle(transport transport) {
 	positions.add(id, 8, 8)
 	materials.add(id, flesh)
 	log.Println(id)
-	log.Println(positions[id])
+	log.Println(positions[id.String()])
 
 	session := newSession(id, transport, toConn, toGame)
 
@@ -85,15 +85,15 @@ func (h *Handler) handleMessage(msg message, session *session) {
 	log.Println(id)
 	switch msg := msg.message.(type) {
 	case messageMove:
-		p := positions[id]
+		p := positions[id.String()]
 		log.Println(p)
 		log.Println(p.x)
 		log.Println(msg.X)
-		positions[id] = position{
+		positions[id.String()] = position{
 			x: p.x + msg.X,
 			y: p.y + msg.Y,
 		}
-		log.Println(positions[id])
+		log.Println(positions[id.String()])
 		h.registry.publish(buildMessageWorld())
 		//h.registry.subscribe(msg, session)
 		//h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))

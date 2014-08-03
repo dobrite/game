@@ -61,44 +61,39 @@ var tileMethods = [grass, dirt, water, empty];
 var itemMethods = [empty, empty, player];
 
 function drawMap(terrain, xOffset) {
-    var tileType, x, y, isoX, isoY, idx;
-
     for (var i = 0, iL = terrain.length; i < iL; i++) {
         for (var j = 0, jL = terrain[i].length; j < jL; j++) {
             // cartesian 2D coordinate
-            x = j * TILE_WIDTH;
-            y = i * TILE_HEIGHT;
+            var x = j * TILE_WIDTH;
+            var y = i * TILE_HEIGHT;
 
             // iso coordinate
-            isoX = x - y;
-            isoY = (x + y) / 2;
+            var isoX = x - y;
+            var isoY = (x + y) / 2;
 
-            tileType = terrain[i][j];
-            drawTile = tileMethods[tileType];
+            var tileType = terrain[i][j];
+            var drawTile = tileMethods[tileType];
             drawTile(xOffset + isoX, isoY);
         }
     }
 }
 
 function drawItems(items, xOffset) {
-  var itemType, x, y, isoX, isoY, idx, coords, item;
-
   for (var i =0, iL = items.length; i < iL; i++) {
-    item = items[i];
-    y = item.coords[0];
-    x = item.coords[1];
-    itemType = item.mt;
-    console.log(itemType);
+    var item = items[i];
+    var y = item.coords[0];
+    var x = item.coords[1];
+    var itemType = item.mt;
 
     // cartesian 2D coordinate
     x = (x * TILE_WIDTH) + TILE_WIDTH/4;
     y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
 
     // iso coordinate
-    isoX = x - y;
-    isoY = (x + y) / 2;
+    var isoX = x - y;
+    var isoY = (x + y) / 2;
 
-    drawItem = itemMethods[itemType];
+    var drawItem = itemMethods[itemType];
     drawItem(xOffset + isoX, isoY);
   }
 }
@@ -122,6 +117,7 @@ function handleGameConfigMessage(message) {
 function handleGameWorldMessage(message) {
   drawMap(message.data.m, STAGE_WIDTH / 2);
   drawItems(message.data.i, STAGE_WIDTH / 2);
+  message = null;
 }
 
 var messageToHandler = {
@@ -133,6 +129,7 @@ var messageToHandler = {
 connection.onmessage = function (e) {
   var message = JSON.parse(e.data);
   messageToHandler[message.event](message);
+  e = null;
 };
 
 function buildMove(y, x) {
