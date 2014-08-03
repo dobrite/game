@@ -8,7 +8,7 @@ import (
 
 var positions positionsMap
 var materials materialsMap
-var entities []entity
+var entities []*uuid.UUID
 
 type Game struct {
 	positionsMap
@@ -17,7 +17,7 @@ type Game struct {
 	strategy
 }
 
-func newUUID() entity {
+func newUUID() *uuid.UUID {
 	u4, err := uuid.NewV4()
 	if err != nil {
 		panic("uuid failed")
@@ -33,7 +33,7 @@ func coinFlip() bool {
 	}
 }
 
-func makeTile(x int, y int, t materialType) entity {
+func makeTile(x int, y int, t materialType) *uuid.UUID {
 	ent := newUUID()
 
 	positions.add(ent, x, y)
@@ -48,7 +48,7 @@ func pump() {
 func init() {
 	positions = make(positionsMap)
 	materials = make(materialsMap)
-	entities = make([]entity, 200000)
+	entities = make([]*uuid.UUID, 200000)
 }
 
 func (g *Game) Init() {

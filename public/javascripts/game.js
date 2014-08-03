@@ -58,7 +58,7 @@ var water = isoTile(0x85b9bb, 0x476263, TILE_WIDTH, TILE_HEIGHT);
 var player = isoItem(0x5a6acf, 0x2b40cc, TILE_WIDTH/2, TILE_HEIGHT/2);
 var empty = function(){};
 var tileMethods = [grass, dirt, water, empty];
-var itemMethods = [empty, player];
+var itemMethods = [empty, empty, player];
 
 function drawMap(terrain, xOffset) {
     var tileType, x, y, isoX, isoY, idx;
@@ -80,31 +80,27 @@ function drawMap(terrain, xOffset) {
     }
 }
 
-var items = [
-  [[4, 8], 1],
-];
-
 function drawItems(items, xOffset) {
-    var itemType, x, y, isoX, isoY, idx, coords, item;
+  var itemType, x, y, isoX, isoY, idx, coords, item;
 
-    for (var i =0, iL = items.length; i < iL; i++) {
-      item = items[i];
-      coords = item[0];
-      y = coords[0];
-      x = coords[1];
-      itemType = item[1];
+  for (var i =0, iL = items.length; i < iL; i++) {
+    item = items[i];
+    y = item.coords[0];
+    x = item.coords[1];
+    itemType = item.mt;
+    console.log(itemType);
 
-      // cartesian 2D coordinate
-      x = (x * TILE_WIDTH) + TILE_WIDTH/4;
-      y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
+    // cartesian 2D coordinate
+    x = (x * TILE_WIDTH) + TILE_WIDTH/4;
+    y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
 
-      // iso coordinate
-      isoX = x - y;
-      isoY = (x + y) / 2;
+    // iso coordinate
+    isoX = x - y;
+    isoY = (x + y) / 2;
 
-      drawItem = itemMethods[itemType];
-      drawItem(xOffset + isoX, isoY);
-    }
+    drawItem = itemMethods[itemType];
+    drawItem(xOffset + isoX, isoY);
+  }
 }
 
 // When the connection is open, send some data to the server
@@ -123,33 +119,20 @@ function handleGameConfigMessage(message) {
   ID = message.id;
 }
 
-function dtodd(arr) {
-  var newArr = [];
-  while(arr.length) newArr.push(arr.splice(0,CHUNK_X));
-  drawMap(newArr, STAGE_WIDTH / 2);
-}
-
 function handleGameWorldMessage(message) {
-  dtodd(message.data.m);
+  drawMap(message.data.m, STAGE_WIDTH / 2);
+  drawItems(message.data.i, STAGE_WIDTH / 2);
 }
 
-function handleGameItemsMessage(message) {
-  drawItems(message.items, STAGE_WIDTH / 2);
-}
+var messageToHandler = {
+  "game:config": handleGameConfigMessage,
+  "game:world": handleGameWorldMessage,
+};
 
 // Log messages from the server
 connection.onmessage = function (e) {
   var message = JSON.parse(e.data);
-  console.log(message);
-  if(message.event == "game:config") {
-    handleGameConfigMessage(message);
-  }
-  if(message.event == "game:world") {
-    handleGameWorldMessage(message);
-  }
-  if(message.event == "game:items") {
-    handleGameItemsMessage(message);
-  }
+  messageToHandler[message.event](message);
 };
 
 function buildMove(y, x) {

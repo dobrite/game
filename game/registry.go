@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/deckarep/golang-set"
+	"github.com/nu7hatch/gouuid"
 	"gopkg.in/tomb.v2"
 )
 
@@ -9,7 +10,7 @@ import (
 
 type registry struct {
 	sessionIds mapset.Set
-	sessions   map[entity]*session
+	sessions   map[*uuid.UUID]*session
 	command    chan func()
 	t          tomb.Tomb
 }
@@ -17,7 +18,7 @@ type registry struct {
 func newRegistry() *registry {
 	registry := &registry{
 		sessionIds: mapset.NewThreadUnsafeSet(),
-		sessions:   make(map[entity]*session),
+		sessions:   make(map[*uuid.UUID]*session),
 		command:    make(chan func()),
 	}
 	registry.t.Go(registry.run)
@@ -40,7 +41,7 @@ func (r *registry) publish(payload string) {
 		s := r.sessionIds.Iter()
 		for sId := range s {
 			// whole server can be blocked by a slow client
-			r.sessions[sId.(entity)].toConn <- payload
+			r.sessions[sId.(*uuid.UUID)].toConn <- payload
 		}
 	}
 }

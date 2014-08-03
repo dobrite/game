@@ -1,7 +1,6 @@
 package game
 
 import (
-	"github.com/nu7hatch/gouuid"
 	"log"
 	"net/http"
 )
@@ -44,22 +43,22 @@ func (h *Handler) Websocket(w http.ResponseWriter, req *http.Request) {
 func (h *Handler) handle(transport transport) {
 	toGame := make(chan string)
 	toConn := make(chan string)
-	u4, err := uuid.NewV4()
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	id := u4
-	log.Printf("client connected: %s", id)
+
+	id := newUUID()
+	positions.add(id, 8, 8)
+	materials.add(id, flesh)
+	log.Println(id)
+	log.Println(positions[id])
+
 	session := newSession(id, transport, toConn, toGame)
+
 	h.registry.add(session)
 	h.registry.send(session, buildMessageConfig(id))
 	h.registry.send(session, buildMessageWorld())
-	p := position{
-		x: 8,
-		y: 8,
-	}
-	positions[id] = p
+
+	log.Printf("client connected: %s", id)
+
+	materials.byType(flesh)
 	go h.listen(session)
 }
 
@@ -81,24 +80,30 @@ func (h *Handler) listen(session *session) {
 	h.teardown(session)
 }
 
-func (h *Handler) teardown(session *session) {
-	log.Printf("client disconnected: %s", session.id)
-	h.registry.remove(session)
-}
-
 func (h *Handler) handleMessage(msg message, session *session) {
 	id := msg.id
+	log.Println(id)
 	switch msg := msg.message.(type) {
 	case messageMove:
 		p := positions[id]
+		log.Println(p)
+		log.Println(p.x)
+		log.Println(msg.X)
 		positions[id] = position{
 			x: p.x + msg.X,
 			y: p.y + msg.Y,
 		}
+		log.Println(positions[id])
 		h.registry.publish(buildMessageWorld())
 		//h.registry.subscribe(msg, session)
 		//h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))
 	default:
 		log.Fatal("I give up")
 	}
+}
+
+func (h *Handler) teardown(session *session) {
+	log.Printf("client disconnected: %s", session.id)
+	h.registry.remove(session)
+	// TODO also remove them from all component maps
 }

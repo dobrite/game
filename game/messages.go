@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/nu7hatch/gouuid"
+	"log"
 )
 
 type message struct {
-	id      entity
+	id      *uuid.UUID
 	message interface{}
 }
 
@@ -22,12 +23,13 @@ type messageMove struct {
 	X int `json:"x"`
 }
 
-func buildMessageConfig(id entity) string {
+func buildMessageConfig(id *uuid.UUID) string {
+	log.Println(id)
 	wc := &wireConfig{
 		Event:   "game:config",
 		Chunk_x: Chunk_x,
 		Chunk_y: Chunk_y,
-		Id:      id,
+		Id:      id.String(),
 	}
 
 	c, _ := json.Marshal(wc)

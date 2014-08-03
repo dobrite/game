@@ -1,6 +1,10 @@
 package game
 
-type movable map[entity]movement
+import (
+	"github.com/nu7hatch/gouuid"
+)
+
+type movable map[*uuid.UUID]movement
 
 type movement struct {
 	direction

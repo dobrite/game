@@ -1,18 +1,22 @@
 package game
 
-type positionsMap map[entity]position
+import (
+	"github.com/nu7hatch/gouuid"
+)
+
+type positionsMap map[*uuid.UUID]position
 
 type position struct {
-	x int
-	y int
-	z int
+	x, y, z, cx, cy int
 }
 
-func (p positionsMap) add(ent entity, x int, y int) {
+func (p positionsMap) add(ent *uuid.UUID, x int, y int) {
 	p[ent] = position{
-		x: x,
-		y: y,
-		z: default_depth,
+		x:  x,
+		y:  y,
+		z:  defaultDepth,
+		cx: 0,
+		cy: 0,
 	}
 }
 
