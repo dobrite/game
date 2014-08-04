@@ -4,121 +4,121 @@ var CHUNK_Y;
 var CHUNK_X;
 var ID;
 
-var STAGE_WIDTH = 1920;
-var STAGE_HEIGHT = 1024;
+var SCENE_WIDTH = 1920;
+var SCENE_HEIGHT = 1024;
 
 var TILE_HEIGHT =  32;
 var TILE_WIDTH = 32;
 
 var CHUNK;
 
-var stage = new PIXI.Stage(0xEEFFFF);
-var renderer = PIXI.autoDetectRenderer(STAGE_WIDTH, STAGE_HEIGHT);
+var aspect = window.innerWidth / window.innerHeight;
+//var camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
+camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -5000, 5000);
 
-document.body.appendChild(renderer.view);
+var scene = new THREE.Scene();
 
-var graphics = new PIXI.Graphics();
-stage.addChild(graphics);
+//var axis = new THREE.AxisHelper(128);
+//axis.position.set(0, 0, 0);
+//scene.add(axis);
+//
+//var gridHelper = new THREE.GridHelper(1024, 32);
+//scene.add(gridHelper);
 
-// An iso tile is twice as wide as it is tall (2w x h)
-function isoTile(backgroundColor, borderColor, w, h) {
-  var h_2 = h/2;
+//var ch = new THREE.CameraHelper(camera);
+//scene.add(ch);
 
-  return function(x, y) {
-    graphics.beginFill(backgroundColor);
-    graphics.lineStyle(1, borderColor, 1);
-    graphics.moveTo(x, y);
-    graphics.lineTo(x + w, y + h_2);
-    graphics.lineTo(x, y + h);
-    graphics.lineTo(x - w, y + h_2);
-    graphics.lineTo(x , y);
-    graphics.endFill();
-  };
-}
+var renderer = new THREE.WebGLRenderer();
 
-function isoItem(backgroundColor, borderColor, w, h) {
-  var h_2 = h/2;
+renderer.setSize(SCENE_WIDTH, SCENE_HEIGHT);
+document.body.appendChild(renderer.domElement);
 
-  return function(x, y) {
-    graphics.beginFill(backgroundColor);
-    graphics.lineStyle(1, borderColor, 1);
-    graphics.moveTo(x, y);
-    graphics.lineTo(x + w, y + h_2);
-    graphics.lineTo(x, y + h);
-    graphics.lineTo(x - w, y + h_2);
-    graphics.lineTo(x , y);
-    graphics.endFill();
-  };
-}
+camera.position.set(200, 200, 200); // all components equal
+camera.up = new THREE.Vector3(0, 1, 0);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-function makeTileTexture(bgColor, brColor, w, h) {
-  var graphics = new PIXI.Graphics();
-  var h_2 = h/2;
+var ambientLight = new THREE.AmbientLight(0x10);
+scene.add(ambientLight);
 
-  graphics.beginFill(backgroundColor);
-  graphics.lineStyle(1, borderColor, 1);
-  graphics.moveTo(x, y);
-  graphics.lineTo(x + w, y + h_2);
-  graphics.lineTo(x, y + h);
-  graphics.lineTo(x - w, y + h_2);
-  graphics.lineTo(x , y);
-  graphics.endFill();
+var directionalLight = new THREE.DirectionalLight(0xffffff);
+directionalLight.position.x = 500;
+directionalLight.position.y = 1000;
+directionalLight.position.z = 500;
+directionalLight.position.normalize();
+scene.add( directionalLight );
 
-}
+var cubeGeo = new THREE.BoxGeometry(TILE_WIDTH, 32, TILE_HEIGHT);
+
+var grassMesh = new THREE.MeshLambertMaterial({color: 0x80CF5A, shading: THREE.FlatShading});
+var dirtMesh = new THREE.MeshLambertMaterial({color: 0x96712F, shading: THREE.FlatShading});
+var waterMesh = new THREE.MeshLambertMaterial({color: 0x85b9bb, shading: THREE.FlatShading});
+
+var itemGeo = new THREE.BoxGeometry(TILE_WIDTH/2, 16, TILE_HEIGHT/2);
+
+var itemMesh = new THREE.MeshLambertMaterial({color: 0x5a6acf, shading: THREE.FlatShading});
 
 // tiles
-var grass = isoTile(0x80CF5A, 0x339900, TILE_WIDTH, TILE_HEIGHT);
-var dirt = isoTile(0x96712F, 0x403014, TILE_WIDTH, TILE_HEIGHT);
-var water = isoTile(0x85b9bb, 0x476263, TILE_WIDTH, TILE_HEIGHT);
-var player = isoItem(0x5a6acf, 0x2b40cc, TILE_WIDTH/2, TILE_HEIGHT/2);
+var grass = isoTile(grassMesh, TILE_WIDTH, TILE_HEIGHT);
+var dirt = isoTile(dirtMesh, TILE_WIDTH, TILE_HEIGHT);
+var water = isoTile(waterMesh, TILE_WIDTH, TILE_HEIGHT);
+
+var player = isoItem(itemMesh, TILE_WIDTH/2, TILE_HEIGHT/2);
+
+function isoTile(mesh, w, h) {
+  return function(x, y) {
+    var cube = new THREE.Mesh(cubeGeo, mesh);
+    cube.position.x = x + 16;
+    cube.position.z = y + 16;
+    scene.add(cube);
+  };
+}
+
+function isoItem(mesh, w, h) {
+  return function(x, y) {
+    var cube = new THREE.Mesh(itemGeo, mesh);
+    cube.position.x = x + 16;
+    cube.position.y = 32;
+    cube.position.z = y + 16;
+    scene.add(cube);
+  };
+}
+
 var empty = function(){};
 var tileMethods = [grass, dirt, water, empty];
 var itemMethods = [empty, empty, player];
 
-function drawMap(terrain, xOffset) {
-    for (var i = 0, iL = terrain.length; i < iL; i++) {
-        for (var j = 0, jL = terrain[i].length; j < jL; j++) {
-            // cartesian 2D coordinate
-            var x = j * TILE_WIDTH;
-            var y = i * TILE_HEIGHT;
+function drawMap(terrain) {
+  for (var i = 0, iL = terrain.length; i < iL; i++) {
+   for (var j = 0, jL = terrain[i].length; j < jL; j++) {
+      var x = j * TILE_WIDTH;
+      var y = i * TILE_HEIGHT;
 
-            // iso coordinate
-            var isoX = x - y;
-            var isoY = (x + y) / 2;
-
-            var tileType = terrain[i][j];
-            var drawTile = tileMethods[tileType];
-            drawTile(xOffset + isoX, isoY);
-        }
+      var tileType = terrain[i][j];
+      var drawTile = tileMethods[tileType];
+      drawTile(x, y);
     }
+  }
 }
 
-function drawItems(items, xOffset) {
+function drawItems(items) {
   for (var i =0, iL = items.length; i < iL; i++) {
     var item = items[i];
     var y = item.coords[0];
     var x = item.coords[1];
     var itemType = item.mt;
 
-    // cartesian 2D coordinate
     x = (x * TILE_WIDTH) + TILE_WIDTH/4;
     y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
 
-    // iso coordinate
-    var isoX = x - y;
-    var isoY = (x + y) / 2;
-
     var drawItem = itemMethods[itemType];
-    drawItem(xOffset + isoX, isoY);
+    drawItem(x, y);
   }
 }
 
-// When the connection is open, send some data to the server
 connection.onopen = function () {
-  //connection.send('Ping'); // Send the message 'Ping' to the server
+  console.log("connected");
 };
 
-// Log errors
 connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
@@ -130,9 +130,8 @@ function handleGameConfigMessage(message) {
 }
 
 function handleGameWorldMessage(message) {
-  drawMap(message.data.m, STAGE_WIDTH / 2);
-  drawItems(message.data.i, STAGE_WIDTH / 2);
-  message = null;
+  drawMap(message.data.m);
+  drawItems(message.data.i);
 }
 
 var messageToHandler = {
@@ -144,11 +143,17 @@ var messageToHandler = {
 connection.onmessage = function (e) {
   var message = JSON.parse(e.data);
   messageToHandler[message.event](message);
-  e = null;
 };
 
 function buildMove(y, x) {
-  return {id: ID, event: "game:move", data: {y: y, x: x}};
+  return {
+    id: ID,
+    event: "game:move",
+    data: {
+      y: y,
+      x: x
+    },
+  };
 }
 
 function moveAvatar(y, x) {
@@ -177,10 +182,16 @@ kd.RIGHT.down(moveRight);
 function start () {
   function animate() {
     kd.tick();
-    requestAnimFrame(animate);
-    renderer.render(stage);
+    requestAnimationFrame(animate);
+    //var timer = Date.now() * 0.0001;
+
+    //camera.position.x = Math.cos(timer) * 200;
+    //camera.position.z = Math.sin(timer) * 200;
+    //camera.position.y = Math.tan(timer) * 200;
+    //camera.lookAt(scene.position);
+    renderer.render(scene, camera);
   }
-  requestAnimFrame(animate);
+  requestAnimationFrame(animate);
 }
 
 start();
