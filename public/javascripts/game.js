@@ -1,7 +1,5 @@
 var connection = new WebSocket('ws://localhost:3000/sock/');
 
-var CHUNK_Y;
-var CHUNK_X;
 var ID;
 
 var SCENE_WIDTH = 1920;
@@ -69,17 +67,17 @@ function isoTile(mesh, w, h) {
     var cube = new THREE.Mesh(cubeGeo, mesh);
     cube.position.x = x + 16;
     cube.position.z = y + 16;
-    scene.add(cube);
+    return cube;
   };
 }
 
 function isoItem(mesh, w, h) {
   return function(x, y) {
-    var cube = new THREE.Mesh(itemGeo, mesh);
-    cube.position.x = x + 16;
-    cube.position.y = 32;
-    cube.position.z = y + 16;
-    scene.add(cube);
+    var item = new THREE.Mesh(itemGeo, mesh);
+    item.position.x = x + 16;
+    item.position.y = 32;
+    item.position.z = y + 16;
+    return item;
   };
 }
 
@@ -95,10 +93,19 @@ function drawMap(terrain) {
 
       var tileType = terrain[i][j];
       var drawTile = tileMethods[tileType];
-      drawTile(x, y);
+      var cube = drawTile(x, y);
+      if (TILES[i][j] === undefined) {
+        TILES[i][j] = cube;
+        scene.add(cube);
+      } else {
+        //nothing for now
+      }
     }
   }
 }
+
+// TODO store by UUID?
+var PLAYER;
 
 function drawItems(items) {
   for (var i =0, iL = items.length; i < iL; i++) {
@@ -111,7 +118,15 @@ function drawItems(items) {
     y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
 
     var drawItem = itemMethods[itemType];
-    drawItem(x, y);
+    if (PLAYER === undefined) {
+      PLAYER = drawItem(x, y);
+      scene.add(PLAYER);
+    } else {
+      // TODO this sucks
+      PLAYER.position.x = x + 16;
+      PLAYER.position.y = 32;
+      PLAYER.position.z = y + 16;
+    }
   }
 }
 
@@ -123,9 +138,18 @@ connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
 
+var TILES;
+
+function initTiles(y, x) {
+  var tiles = new Array(y);
+  for (var i = 0; i < y; i++) {
+    tiles[i] = new Array(x);
+  }
+  return tiles;
+}
+
 function handleGameConfigMessage(message) {
-  CHUNK_Y = message.chunk_y;
-  CHUNK_X = message.chunk_x;
+  TILES = initTiles(message.chunk_y, message.chunk_x);
   ID = message.id;
 }
 
