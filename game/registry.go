@@ -7,11 +7,11 @@ import (
 )
 
 //TODO move mapset to clipperhouse.github.io/gen
-
 type registry struct {
 	sessionIds mapset.Set
 	sessions   map[*uuid.UUID]*session
 	command    chan func()
+	commands   map[string]func()
 	t          tomb.Tomb
 }
 
@@ -20,6 +20,7 @@ func newRegistry() *registry {
 		sessionIds: mapset.NewThreadUnsafeSet(),
 		sessions:   make(map[*uuid.UUID]*session),
 		command:    make(chan func()),
+		commands:   make(map[string]func()),
 	}
 	registry.t.Go(registry.run)
 	return registry

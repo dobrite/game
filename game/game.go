@@ -4,11 +4,13 @@ import (
 	"github.com/nu7hatch/gouuid"
 	"log"
 	"math/rand"
+	"time"
 )
 
 var positions positionsMap
 var materials materialsMap
 var entities []*uuid.UUID
+var reg *registry
 
 type Game struct {
 	positionsMap
@@ -43,6 +45,14 @@ func makeTile(x int, y int, t materialType) *uuid.UUID {
 }
 
 func pump() {
+	for _ = range time.Tick(1000 * time.Millisecond) {
+		for k, v := range reg.commands {
+			v()
+			delete(reg.commands, k)
+		}
+		reg.publish(buildMessageWorld())
+		log.Println("tick")
+	}
 }
 
 func init() {
@@ -55,4 +65,6 @@ func (g *Game) Init() {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
 	w.buildWorld()
+	reg = newRegistry()
+	go pump()
 }

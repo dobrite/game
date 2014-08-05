@@ -104,7 +104,7 @@ function drawMap(terrain) {
   }
 }
 
-// TODO store by UUID?
+// TODO store by UUID
 var PLAYER;
 
 function drawItems(items) {

@@ -5,15 +5,11 @@ import (
 	"net/http"
 )
 
-type Handler struct {
-	*registry
-}
+type Handler struct{}
 
 func NewServeMux() *http.ServeMux {
 	mux := http.NewServeMux()
-	h := &Handler{
-		registry: newRegistry(),
-	}
+	h := &Handler{}
 	mux.HandleFunc("/sock/", h.Websocket)
 	mux.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
 	mux.HandleFunc("/", IndexHandler)
@@ -47,14 +43,11 @@ func (h *Handler) handle(transport transport) {
 	id := newUUID()
 	positions.add(id, 8, 8)
 	materials.add(id, flesh)
-	log.Println(id)
-	log.Println(positions[id.String()])
 
 	session := newSession(id, transport, toConn, toGame)
 
-	h.registry.add(session)
-	h.registry.send(session, buildMessageConfig(id))
-	h.registry.send(session, buildMessageWorld())
+	reg.add(session)
+	reg.send(session, buildMessageConfig(id))
 
 	log.Printf("client connected: %s", id)
 
@@ -82,21 +75,14 @@ func (h *Handler) listen(session *session) {
 
 func (h *Handler) handleMessage(msg message, session *session) {
 	id := msg.id
-	log.Println(id)
 	switch msg := msg.message.(type) {
 	case messageMove:
-		p := positions[id.String()]
-		log.Println(p)
-		log.Println(p.x)
-		log.Println(msg.X)
-		positions[id.String()] = position{
-			x: p.x + msg.X,
-			y: p.y + msg.Y,
+		reg.commands[id.String()] = func() {
+			p := positions[id.String()]
+			p.x = p.x + msg.X
+			p.y = p.y + msg.Y
+			positions[id.String()] = p
 		}
-		log.Println(positions[id.String()])
-		h.registry.publish(buildMessageWorld())
-		//h.registry.subscribe(msg, session)
-		//h.registry.send(session, buildMessageSubscriptionSucceeded(msg.Channel))
 	default:
 		log.Fatal("I give up")
 	}
@@ -104,6 +90,6 @@ func (h *Handler) handleMessage(msg message, session *session) {
 
 func (h *Handler) teardown(session *session) {
 	log.Printf("client disconnected: %s", session.id)
-	h.registry.remove(session)
+	reg.remove(session)
 	// TODO also remove them from all component maps
 }
