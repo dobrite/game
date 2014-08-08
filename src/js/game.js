@@ -8,8 +8,6 @@ var SCENE_HEIGHT = 1024;
 var TILE_HEIGHT =  32;
 var TILE_WIDTH = 32;
 
-var CHUNK;
-
 var aspect = window.innerWidth / window.innerHeight;
 //var camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
 camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, -5000, 5000);
@@ -31,7 +29,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize(SCENE_WIDTH, SCENE_HEIGHT);
 document.body.appendChild(renderer.domElement);
 
-camera.position.set(200, 200, 200); // all components equal
+camera.position.set(200, 200, 200);
 camera.up = new THREE.Vector3(0, 1, 0);
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
@@ -43,7 +41,7 @@ directionalLight.position.x = 500;
 directionalLight.position.y = 1000;
 directionalLight.position.z = 500;
 directionalLight.position.normalize();
-scene.add( directionalLight );
+scene.add(directionalLight);
 
 var cubeGeo = new THREE.BoxGeometry(TILE_WIDTH, 32, TILE_HEIGHT);
 
@@ -85,20 +83,26 @@ var empty = function(){};
 var tileMethods = [grass, dirt, water, empty];
 var itemMethods = [empty, empty, player];
 
-function drawMap(terrain) {
-  for (var i = 0, iL = terrain.length; i < iL; i++) {
-   for (var j = 0, jL = terrain[i].length; j < jL; j++) {
-      var x = j * TILE_WIDTH;
-      var y = i * TILE_HEIGHT;
+function drawWorld(chunk) {
+  for (var y = 0, yL = WORLD_Y; y < yL; y++) {
+    for (var x = 0, xL = WORLD_X; x < xL; x++) {
+      var offset_y = y * CHUNK_Y;
+      var offset_x = x * CHUNK_X;
+      for (var i = 0, iL = CHUNK_Y; i < iL; i++) {
+        for (var j = 0, jL = CHUNK_X; j < jL; j++) {
+          var cube_w = j * TILE_WIDTH;
+          var cube_h = i * TILE_HEIGHT;
 
-      var tileType = terrain[i][j];
-      var drawTile = tileMethods[tileType];
-      var cube = drawTile(x, y);
-      if (TILES[i][j] === undefined) {
-        TILES[i][j] = cube;
-        scene.add(cube);
-      } else {
-        //nothing for now
+          var tileType = chunk[y][x].m[i][j];
+          var drawTile = tileMethods[tileType];
+          var cube = drawTile(cube_w + offset_x, cube_h + offset_y);
+          if (WORLD[y][x][i][j] === undefined) {
+            WORLD[y][x][i][j] = cube;
+            scene.add(cube);
+          } else {
+            //nothing for now
+          }
+        }
       }
     }
   }
@@ -138,8 +142,6 @@ connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
 
-var TILES;
-
 function initTiles(y, x) {
   var tiles = new Array(y);
   for (var i = 0; i < y; i++) {
@@ -148,13 +150,33 @@ function initTiles(y, x) {
   return tiles;
 }
 
+var WORLD;
+var WORLD_Y;
+var WORLD_X;
+var CHUNK_Y;
+var CHUNK_X;
+
 function handleGameConfigMessage(message) {
-  TILES = initTiles(message.chunk_y, message.chunk_x);
+  WORLD_Y = message.world_y;
+  WORLD_X = message.world_x;
+  CHUNK_Y = message.chunk_y;
+  CHUNK_X = message.chunk_x;
+
+  var world = new Array(message.world_y);
+  for (var i = 0; i < message.world_y; i ++) {
+    world[i] = new Array(message.world_x);
+  }
+  for (var j = 0; j < message.world_y; j ++) {
+    for (var i = 0; i < message.world_x; i++) {
+      world[j][i] = initTiles(message.chunk_y, message.chunk_x);
+    }
+  }
+  WORLD = world;
   ID = message.id;
 }
 
 function handleGameWorldMessage(message) {
-  drawMap(message.data.m);
+  drawWorld(message.data);
   drawItems(message.data.i);
 }
 
