@@ -25,14 +25,14 @@ func (w *world) buildWorld() {
 	}
 }
 
-//func (w *world) buildWorld() {
-//	offsetX := math.Floor(worldX / 2)
-//	offsetY := math.Floor(worldY / 2)
-//
-//	for x := -offsetX; x < (worldX - offsetX); x++ {
-//		for y := -offsetY; y < (worldX - offsetY); y++ {
-//			var c chunk
-//			w[y][x] = c.buildChunk()
-//		}
-//	}
-//}
+func (w *world) dtodd() [][]*chunk {
+	base := make([]*chunk, worldY*worldX)
+	outer := make([][]*chunk, worldY)
+	for i := range outer {
+		outer[i] = base[i*worldX : (i+1)*worldX]
+		for j := range outer[i] {
+			outer[i][j] = w[j][i]
+		}
+	}
+	return outer
+}

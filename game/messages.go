@@ -41,23 +41,11 @@ func buildMessageConfig(id *uuid.UUID) string {
 func buildMessageWorld() string {
 	ww := &wireWorld{
 		Event: "game:world",
-		Data:  blah(),
+		Data:  w.dtodd(),
 	}
 
 	w, _ := json.Marshal(ww)
 	return string(w)
-}
-
-func blah() [][]*chunk {
-	base := make([]*chunk, worldY*worldX)
-	outer := make([][]*chunk, worldY)
-	for i := range outer {
-		outer[i] = base[i*worldX : (i+1)*worldX]
-		for j := range outer[i] {
-			outer[i][j] = w[j][i]
-		}
-	}
-	return outer
 }
 
 func MessageUnmarshalJSON(b []byte) (msg message, err error) {
