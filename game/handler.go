@@ -41,17 +41,18 @@ func (h *Handler) handle(transport transport) {
 	toConn := make(chan string)
 
 	id := newUUID()
-	positions.add(id, 8, 8, 0, 0)
-	materials.add(id, flesh)
+	positionsSet.add(id, 8, 8, 0, 0)
+	materialsSet.add(id, flesh)
+	controlledSet.add(id)
 
 	session := newSession(id, transport, toConn, toGame)
 
 	reg.add(session)
 	reg.send(session, buildMessageConfig(id))
+	reg.publish(buildMessageItem(id))
 
 	log.Printf("client connected: %s", id)
 
-	materials.byType(flesh)
 	go h.listen(session)
 }
 
@@ -64,7 +65,7 @@ func (h *Handler) listen(session *session) {
 				log.Println("error unmarshaling json: " + err.Error())
 				//break
 			} else {
-				h.handleMessage(msg, session)
+				h.handleMessage(msg)
 			}
 		} else {
 			break
@@ -73,16 +74,11 @@ func (h *Handler) listen(session *session) {
 	h.teardown(session)
 }
 
-func (h *Handler) handleMessage(msg message, session *session) {
+func (h *Handler) handleMessage(msg message) {
 	id := msg.id
 	switch msg := msg.message.(type) {
 	case messageMove:
-		reg.commands[id.String()] = func() {
-			p := positions[id.String()]
-			p.x = p.x + msg.X
-			p.y = p.y + msg.Y
-			positions[id.String()] = p
-		}
+		controllableSystem.enqueue(id, msg)
 	default:
 		log.Fatal("I give up")
 	}
@@ -91,5 +87,7 @@ func (h *Handler) handleMessage(msg message, session *session) {
 func (h *Handler) teardown(session *session) {
 	log.Printf("client disconnected: %s", session.id)
 	reg.remove(session)
-	// TODO also remove them from all component maps
+	positionsSet.remove(session.id)
+	materialsSet.remove(session.id)
+	controlledSet.remove(session.id)
 }

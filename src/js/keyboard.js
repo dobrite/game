@@ -1,7 +1,8 @@
-var connection = require('./connection');
+var connection = require('./connection'),
+    messages = require('./messages');
 
 function moveAvatar(y, x) {
-  connection.send(JSON.stringify(buildMove(y, x)));
+  connection.send(JSON.stringify(messages.buildMove(y, x)));
 }
 
 function moveUp(e) {

@@ -8,6 +8,7 @@ type positionsMap map[string]position
 
 type position struct {
 	y, x, z, cy, cx int
+	nil             bool
 }
 
 func (p positionsMap) add(ent *uuid.UUID, y, x, cy, cx int) {
@@ -20,4 +21,20 @@ func (p positionsMap) add(ent *uuid.UUID, y, x, cy, cx int) {
 	}
 }
 
-func (p positionsMap) run() {}
+func (p positionsMap) remove(ent *uuid.UUID) {
+	delete(p, ent.String())
+}
+
+func (p positionsMap) byEnt(ent *uuid.UUID) position {
+	if pos, ok := p[ent.String()]; ok {
+		return pos
+	}
+	return position{nil: true}
+}
+
+func (p *position) toWorldCoords() *worldCoords {
+	return &worldCoords{
+		ChunkCoords: coords{p.cy, p.cx},
+		Coords:      coords{p.y, p.x},
+	}
+}

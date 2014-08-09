@@ -7,8 +7,9 @@ import (
 	"time"
 )
 
-var positions positionsMap
-var materials materialsMap
+var positionsSet positionsMap
+var materialsSet materialsMap
+var controlledSet controlledMap
 var entities []*uuid.UUID
 var reg *registry
 
@@ -37,17 +38,9 @@ func coinFlip() bool {
 	}
 }
 
-func makeTile(y, x, cy, cx int, t materialType) *uuid.UUID {
-	ent := newUUID()
-
-	positions.add(ent, y, x, cy, cx)
-	materials.add(ent, t)
-
-	return ent
-}
-
 func pump() {
-	for _ = range time.Tick(1000 * time.Millisecond) {
+	for _ = range time.Tick(tickTime * time.Millisecond) {
+		controllableSystem.run()
 		for k, v := range reg.commands {
 			v()
 			delete(reg.commands, k)
@@ -58,9 +51,11 @@ func pump() {
 }
 
 func init() {
-	positions = make(positionsMap)
-	materials = make(materialsMap)
+	positionsSet = make(positionsMap)
+	materialsSet = make(materialsMap)
 	entities = make([]*uuid.UUID, 200000)
+	controlledSet = make(controlledMap)
+	controllableSystem.queue = make(map[string]func())
 }
 
 func (g *Game) Init() {
@@ -68,5 +63,6 @@ func (g *Game) Init() {
 	rand.Seed(seed)
 	w.buildWorld()
 	reg = newRegistry()
+	//init systems
 	go pump()
 }

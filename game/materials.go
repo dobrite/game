@@ -13,8 +13,11 @@ type material struct {
 type materialType int
 
 const (
-	grass materialType = iota
+	nothing materialType = iota
+	air
 	dirt
+	grass
+	water
 	flesh
 )
 
@@ -24,12 +27,23 @@ func (m materialsMap) add(ent *uuid.UUID, t materialType) {
 	}
 }
 
+func (m materialsMap) remove(ent *uuid.UUID) {
+	delete(m, ent)
+}
+
 func (m materialsMap) byType(t materialType) []*uuid.UUID {
 	var ret []*uuid.UUID
-	for k, v := range materials {
+	for k, v := range materialsSet {
 		if v.materialType == t {
 			ret = append(ret, k)
 		}
 	}
 	return ret
+}
+
+func (m materialsMap) byEnt(ent *uuid.UUID) material {
+	if mat, ok := m[ent]; ok {
+		return mat
+	}
+	return material{nothing}
 }

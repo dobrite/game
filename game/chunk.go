@@ -13,15 +13,15 @@ type chunk struct {
 
 type chunkCoords coords
 
-type item struct {
-	Coords       chunkCoords `json:"coords"`
-	materialType `json:"mt"`
-}
+//type item struct {
+//	Coords       chunkCoords `json:"coords"`
+//	materialType `json:"mt"`
+//}
 
 type wireChunk struct {
 	Coords    chunkCoords                  `json:"coords"`
 	Materials [chunkY][chunkX]materialType `json:"m"`
-	//I []item                         `json:"i"`
+	//	Items     []item                       `json:"i"`
 }
 
 func (c *chunk) buildChunk(cy int, cx int) *chunk {
@@ -41,7 +41,7 @@ func (c *chunk) buildChunk(cy int, cx int) *chunk {
 			c.a[y][x][0] = t
 		}
 	}
-	c.c = [2]int{cy, cx}
+	c.c = chunkCoords{cy, cx}
 	return c
 }
 
@@ -49,31 +49,17 @@ func (c *chunk) toArray() [chunkY][chunkX]materialType {
 	var arr [chunkY][chunkX]materialType
 	for y := 0; y < chunkY; y++ {
 		for x := 0; x < chunkX; x++ {
-			arr[y][x] = materials[c.a[y][x][0]].materialType
+			arr[y][x] = materialsSet[c.a[y][x][0]].materialType
 		}
 	}
 	return arr
-}
-
-func (c *chunk) allItems() []item {
-	var ret []item
-	ents := materials.byType(flesh)
-	for _, e := range ents {
-		position := positions[e.String()]
-		i := item{
-			Coords:       [2]int{position.y, position.x},
-			materialType: flesh,
-		}
-		ret = append(ret, i)
-	}
-	return ret
 }
 
 func (c *chunk) toWire() *wireChunk {
 	return &wireChunk{
 		Coords:    c.c,
 		Materials: c.toArray(),
-		//	I: c.allItems(),
+		//Items:     c.allItems(),
 	}
 }
 

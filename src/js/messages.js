@@ -1,5 +1,3 @@
-var config = require('./config');
-
 var buildMove = function (y, x) {
   return {
     id: config.ID,

@@ -6,7 +6,6 @@ var world;
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
 var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
 var itemMesh = new THREE.MeshLambertMaterial({color: 0x5a6acf, shading: THREE.FlatShading});
-var player = isoItem(itemMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
 
 var grassMesh = new THREE.MeshLambertMaterial({color: 0x80CF5A, shading: THREE.FlatShading});
 var dirtMesh = new THREE.MeshLambertMaterial({color: 0x96712F, shading: THREE.FlatShading});
@@ -31,13 +30,16 @@ function isoItem(mesh, w, h) {
   };
 }
 
-var grass = isoTile(grassMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
+var nothing = function(){};
+var air = function(){};
 var dirt = isoTile(dirtMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
+var grass = isoTile(grassMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
 var water = isoTile(waterMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
 
-var empty = function(){};
-var tileMethods = [grass, dirt, water, empty];
-var itemMethods = [empty, empty, player];
+var player = isoItem(itemMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
+
+var tileMethods = [nothing, air, dirt, grass, water];
+var itemMethods = [nothing, nothing, nothing, nothing, nothing, player];
 
 var initWorld = function (data) {
   world = new Array(data.world_y);
@@ -60,11 +62,8 @@ var initTiles = function (y, x) {
 };
 
 var renderChunk = function (y, x, chunk) {
-  var chunk_coord_x = chunk.coords[0];
-  var chunk_coord_y = chunk.coords[1];
-
-  var offset_y = chunk_coord_y * config.CHUNK_Y * config.TILE_HEIGHT;
-  var offset_x = chunk_coord_x * config.CHUNK_X * config.TILE_WIDTH;
+  var offset_y = chunk.coords[0] * config.CHUNK_Y * config.TILE_HEIGHT;
+  var offset_x = chunk.coords[1] * config.CHUNK_X * config.TILE_WIDTH;
 
   for (var i = 0; i < config.CHUNK_Y; i++) {
     for (var j = 0; j < config.CHUNK_X; j++) {
@@ -93,26 +92,30 @@ var render = function (chunks) {
   }
 };
 
-function renderItems(items) {
-  for (var i = 0, iL = items.length; i < iL; i++) {
-    var item = items[i];
-    var y = item.coords[0];
-    var x = item.coords[1];
-    var itemType = item.mt;
+function renderItem(item) {
+  var y = item.world_coords.coords[0];
+  var x = item.world_coords.coords[1];
+  var cy = item.world_coords.chunk_coords[0];
+  var cx = item.world_coords.chunk_coords[1];
+  var offset_y = cy * config.CHUNK_Y * config.TILE_HEIGHT;
+  var offset_x = cx * config.CHUNK_X * config.TILE_WIDTH;
+  var itemType = item.material_type;
 
-    x = (x * TILE_WIDTH) + TILE_WIDTH/4;
-    y = (y * TILE_HEIGHT) + TILE_HEIGHT/4;
+  //var cube_w = y * config.CHUNK_Y;
+  //var cube_h = x * config.CHUNK_X;
 
-    var drawItem = itemMethods[itemType];
-    if (window.PLAYER === undefined) {
-      window.PLAYER = drawItem(x, y);
-      scene.add(window.PLAYER);
-    } else {
-      // TODO this sucks
-      window.PLAYER.position.x = x + 16;
-      window.PLAYER.position.y = 32;
-      window.PLAYER.position.z = y + 16;
-    }
+  x = (x * config.TILE_WIDTH) + config.TILE_WIDTH/4 + offset_x;
+  y = (y * config.TILE_HEIGHT) + config.TILE_HEIGHT/4 + offset_y;
+
+  var drawItem = itemMethods[itemType];
+  if (window.PLAYER === undefined) {
+    window.PLAYER = drawItem(x, y);
+    scene.add(window.PLAYER);
+  } else {
+    // TODO this sucks
+    window.PLAYER.position.x = x + 16;
+    window.PLAYER.position.y = 32;
+    window.PLAYER.position.z = y + 16;
   }
 }
 
@@ -121,5 +124,5 @@ module.exports = {
   world: world,
   initWorld: initWorld,
   render: render,
-  renderItems: renderItems,
+  renderItem: renderItem,
 };
