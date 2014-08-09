@@ -41,7 +41,7 @@ func (h *Handler) handle(transport transport) {
 	toConn := make(chan string)
 
 	id := newUUID()
-	positions.add(id, 8, 8)
+	positions.add(id, 8, 8, 0, 0)
 	materials.add(id, flesh)
 
 	session := newSession(id, transport, toConn, toGame)

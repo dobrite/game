@@ -26,10 +26,12 @@ type messageMove struct {
 func buildMessageConfig(id *uuid.UUID) string {
 	log.Println(id)
 	wc := &wireConfig{
-		Event:   "game:config",
-		Chunk_x: Chunk_x,
-		Chunk_y: Chunk_y,
-		Id:      id.String(),
+		Event:  "game:config",
+		ChunkX: chunkX,
+		ChunkY: chunkY,
+		WorldX: worldX,
+		WorldY: worldY,
+		Id:     id.String(),
 	}
 
 	c, _ := json.Marshal(wc)
@@ -39,11 +41,23 @@ func buildMessageConfig(id *uuid.UUID) string {
 func buildMessageWorld() string {
 	ww := &wireWorld{
 		Event: "game:world",
-		Data:  w[0][0],
+		Data:  blah(),
 	}
 
 	w, _ := json.Marshal(ww)
 	return string(w)
+}
+
+func blah() [][]*chunk {
+	base := make([]*chunk, worldY*worldX)
+	outer := make([][]*chunk, worldY)
+	for i := range outer {
+		outer[i] = base[i*worldX : (i+1)*worldX]
+		for j := range outer[i] {
+			outer[i][j] = w[j][i]
+		}
+	}
+	return outer
 }
 
 func MessageUnmarshalJSON(b []byte) (msg message, err error) {

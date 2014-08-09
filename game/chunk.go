@@ -6,42 +6,49 @@ import (
 )
 
 type chunk struct {
-	a [Chunk_y][Chunk_x][]*uuid.UUID
+	a [chunkY][chunkY][]*uuid.UUID
+	c chunkCoords
 	json.Marshaler
 }
 
+type chunkCoords coords
+
 type item struct {
-	Coords       [2]int `json:"coords"`
+	Coords       chunkCoords `json:"coords"`
 	materialType `json:"mt"`
 }
 
 type wireChunk struct {
-	M [Chunk_y][Chunk_x]materialType `json:"m"`
-	I []item                         `json:"i"`
+	Coords    chunkCoords                  `json:"coords"`
+	Materials [chunkY][chunkX]materialType `json:"m"`
+	//I []item                         `json:"i"`
 }
 
-func (c *chunk) buildChunk() *chunk {
-	for y := 0; y < Chunk_y; y++ {
-		for x := 0; x < Chunk_x; x++ {
+func (c *chunk) buildChunk(cy int, cx int) *chunk {
+	for y := 0; y < chunkY; y++ {
+		for x := 0; x < chunkX; x++ {
 			c.a[y][x] = make([]*uuid.UUID, max_ent_per_coord)
+
+			var mat materialType
 			if coinFlip() {
-				t := makeTile(x, y, grass)
-				entities = append(entities, t)
-				c.a[y][x][0] = t
+				mat = grass
 			} else {
-				t := makeTile(x, y, dirt)
-				entities = append(entities, t)
-				c.a[y][x][0] = t
+				mat = dirt
 			}
+
+			t := makeTile(y, x, cy, cx, mat)
+			entities = append(entities, t)
+			c.a[y][x][0] = t
 		}
 	}
+	c.c = [2]int{cy, cx}
 	return c
 }
 
-func (c *chunk) toArray() [Chunk_y][Chunk_x]materialType {
-	var arr [Chunk_y][Chunk_x]materialType
-	for y := 0; y < Chunk_y; y++ {
-		for x := 0; x < Chunk_x; x++ {
+func (c *chunk) toArray() [chunkY][chunkX]materialType {
+	var arr [chunkY][chunkX]materialType
+	for y := 0; y < chunkY; y++ {
+		for x := 0; x < chunkX; x++ {
 			arr[y][x] = materials[c.a[y][x][0]].materialType
 		}
 	}
@@ -63,10 +70,10 @@ func (c *chunk) allItems() []item {
 }
 
 func (c *chunk) toWire() *wireChunk {
-	// TODO send these at start of game
 	return &wireChunk{
-		M: c.toArray(),
-		I: c.allItems(),
+		Coords:    c.c,
+		Materials: c.toArray(),
+		//	I: c.allItems(),
 	}
 }
 

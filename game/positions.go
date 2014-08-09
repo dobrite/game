@@ -7,16 +7,16 @@ import (
 type positionsMap map[string]position
 
 type position struct {
-	x, y, z, cx, cy int
+	y, x, z, cy, cx int
 }
 
-func (p positionsMap) add(ent *uuid.UUID, x int, y int) {
+func (p positionsMap) add(ent *uuid.UUID, y, x, cy, cx int) {
 	p[ent.String()] = position{
-		x:  x,
 		y:  y,
+		x:  x,
 		z:  defaultDepth,
-		cx: 0,
-		cy: 0,
+		cy: cy,
+		cx: cx,
 	}
 }
 

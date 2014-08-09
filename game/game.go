@@ -12,6 +12,8 @@ var materials materialsMap
 var entities []*uuid.UUID
 var reg *registry
 
+type coords [2]int
+
 type Game struct {
 	positionsMap
 	materialsMap
@@ -35,10 +37,10 @@ func coinFlip() bool {
 	}
 }
 
-func makeTile(x int, y int, t materialType) *uuid.UUID {
+func makeTile(y, x, cy, cx int, t materialType) *uuid.UUID {
 	ent := newUUID()
 
-	positions.add(ent, x, y)
+	positions.add(ent, y, x, cy, cx)
 	materials.add(ent, t)
 
 	return ent
