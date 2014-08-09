@@ -45,6 +45,7 @@ func buildMessageWorld() string {
 
 func buildMessageItem(ent *uuid.UUID) string {
 	i := &item{
+		id:       ent,
 		position: positionsSet.byEnt(ent),
 		material: materialsSet.byEnt(ent),
 	}

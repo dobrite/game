@@ -45,7 +45,7 @@ func pump() {
 			v()
 			delete(reg.commands, k)
 		}
-		reg.publish(buildMessageWorld())
+		//reg.publish(buildMessageWorld())
 		log.Println("tick")
 	}
 }

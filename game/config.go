@@ -11,7 +11,7 @@ const (
 	depth             = 32
 	defaultDepth      = 16
 	max_ent_per_coord = 16
-	tickTime          = 50
+	tickTime          = 200
 )
 
 type wireConfig struct {

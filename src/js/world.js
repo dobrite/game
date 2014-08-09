@@ -1,6 +1,7 @@
 var scene = require('./scene');
 
 var world;
+var items = {};
 
 // tiles
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
@@ -92,14 +93,15 @@ var render = function (chunks) {
   }
 };
 
-function renderItem(item) {
-  var y = item.world_coords.coords[0];
-  var x = item.world_coords.coords[1];
-  var cy = item.world_coords.chunk_coords[0];
-  var cx = item.world_coords.chunk_coords[1];
+function renderItem(itemMsg) {
+  // TODO this shouldn't know about itemMsg but w/e
+  var y = itemMsg.world_coords.coords[0];
+  var x = itemMsg.world_coords.coords[1];
+  var cy = itemMsg.world_coords.chunk_coords[0];
+  var cx = itemMsg.world_coords.chunk_coords[1];
   var offset_y = cy * config.CHUNK_Y * config.TILE_HEIGHT;
   var offset_x = cx * config.CHUNK_X * config.TILE_WIDTH;
-  var itemType = item.material_type;
+  var itemType = itemMsg.material_type;
 
   //var cube_w = y * config.CHUNK_Y;
   //var cube_h = x * config.CHUNK_X;
@@ -108,14 +110,15 @@ function renderItem(item) {
   y = (y * config.TILE_HEIGHT) + config.TILE_HEIGHT/4 + offset_y;
 
   var drawItem = itemMethods[itemType];
-  if (window.PLAYER === undefined) {
-    window.PLAYER = drawItem(x, y);
-    scene.add(window.PLAYER);
+  var item = items[itemMsg.id];
+  if (item === undefined) {
+    var itemMesh = drawItem(x, y);
+    items[itemMsg.id] = itemMesh;
+    scene.add(itemMesh);
   } else {
-    // TODO this sucks
-    window.PLAYER.position.x = x + 16;
-    window.PLAYER.position.y = 32;
-    window.PLAYER.position.z = y + 16;
+    item.position.x = x + 16;
+    item.position.y = 32;
+    item.position.z = y + 16;
   }
 }
 
