@@ -9,8 +9,8 @@ type item struct {
 type itemJSON struct {
 	Event        string       `json:"event"`
 	Id           string       `json:"id"`
-	WorldCoords  *worldCoords `json:"world_coords"`
-	MaterialType materialType `json:"material_type"`
+	WorldCoords  *worldCoords `json:"worldCoords"`
+	MaterialType materialType `json:"materialType"`
 }
 
 func (i *item) toJSON() *itemJSON {

@@ -17,7 +17,7 @@ type worldJSON struct {
 }
 
 type worldCoords struct {
-	ChunkCoords coords `json:"chunk_coords"`
+	ChunkCoords coords `json:"chunkCoords"`
 	Coords      coords `json:"coords"`
 }
 
