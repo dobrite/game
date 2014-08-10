@@ -69,8 +69,13 @@ func (g *Game) Init() {
 	brainableSystem.init()
 
 	id := newUUID()
-	positionsSet.add(id, 12, 12, 0, 0)
+	positionsSet.add(id, 0, 0, 0, 0)
 	materialsSet.add(id, cow)
+	brainSet.add(id, random)
+
+	id = newUUID()
+	positionsSet.add(id, 0, 0, 2, 1)
+	materialsSet.add(id, pig)
 	brainSet.add(id, random)
 
 	// TODO init systems

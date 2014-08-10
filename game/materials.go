@@ -16,6 +16,7 @@ const (
 	water
 	flesh
 	cow
+	pig
 )
 
 func (m materialsMap) add(ent string, t materialType) {
