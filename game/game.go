@@ -39,14 +39,14 @@ func trashD(n int) int {
 
 func pump() {
 	for _ = range time.Tick(tickTime * time.Millisecond) {
+		t := time.Now()
 		controllableSystem.run()
 		brainableSystem.run()
 		for k, v := range reg.commands {
 			v()
 			delete(reg.commands, k)
 		}
-		//reg.publish(buildMessageWorld())
-		log.Println("tick")
+		log.Printf("%s", time.Since(t))
 	}
 }
 
@@ -62,7 +62,7 @@ func (g *Game) Init() {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
 	trashRand = rand.New(rand.NewSource(rand.Int63()))
-	w.buildWorld()
+	w.init()
 	reg = newRegistry()
 
 	controllableSystem.init()

@@ -41,7 +41,7 @@ func (h *Handler) handle(transport transport) {
 	toConn := make(chan string)
 
 	id := newUUID()
-	positionsSet.add(id, 8, 8, 0, 0)
+	positionsSet.add(id, 8, 8, 1, 1)
 	materialsSet.add(id, flesh)
 	controlledSet.add(id)
 
@@ -49,7 +49,7 @@ func (h *Handler) handle(transport transport) {
 
 	reg.add(session)
 	reg.send(session, buildMessageConfig(id))
-	reg.send(session, buildMessageWorld())
+	reg.send(session, buildMessageWorld(chunkCoords{1, 1}))
 	reg.publish(buildMessageItem(id))
 
 	log.Printf("client connected: %s", id)

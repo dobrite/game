@@ -8,7 +8,7 @@ import (
 var w world
 
 type world struct {
-	chunks [worldY][worldX]*chunk
+	chunks map[chunkCoords]*chunk
 	json.Marshaler
 }
 
@@ -22,34 +22,48 @@ type worldCoords struct {
 	Coords      coords `json:"coords"`
 }
 
-func (w *world) buildWorld() {
-	offsetX := int(math.Floor(worldX / 2))
-	offsetY := int(math.Floor(worldY / 2))
+func (w *world) init() {
+	w.chunks = make(map[chunkCoords]*chunk)
+	w.buildSpawn(spawnX, spawnY)
+}
 
-	for x := 0; x < worldX; x++ {
-		for y := 0; y < worldY; y++ {
+func (w *world) buildSpawn(spawnY, spawnX int) {
+	offsetY := int(math.Floor(float64(spawnY) / 2))
+	offsetX := int(math.Floor(float64(spawnX) / 2))
+
+	for y := 0; y < spawnY; y++ {
+		for x := 0; x < spawnX; x++ {
 			var c chunk
-			w.chunks[y][x] = c.buildChunk(y-offsetY, x-offsetX)
+			cc := chunkCoords{y - offsetY, x - offsetX}
+			w.chunks[cc] = c.buildChunk(y-offsetY, x-offsetX)
 		}
 	}
 }
 
-func (w *world) dtodd() [][]*chunk {
-	base := make([]*chunk, worldY*worldX)
-	outer := make([][]*chunk, worldY)
-	for i := range outer {
-		outer[i] = base[i*worldX : (i+1)*worldX]
-		for j := range outer[i] {
-			outer[i][j] = w.chunks[j][i]
+// TODO make w.chunks[cc] getter which will init chunk if not in map
+func (w *world) dtodd(cc chunkCoords) [][]*chunk {
+	py := cc[0]
+	px := cc[1]
+
+	offsetY := int(math.Floor(float64(losY) / 2))
+	offsetX := int(math.Floor(float64(losX) / 2))
+
+	base := make([]*chunk, losY*losX)
+	outer := make([][]*chunk, losY)
+	for y := range outer {
+		outer[y] = base[y*losX : (y+1)*losX]
+		for x := range outer[y] {
+			cc := chunkCoords{y + py - offsetY, x + px - offsetX}
+			outer[y][x] = w.chunks[cc]
 		}
 	}
 	return outer
 }
 
-func (w *world) toJSON() *worldJSON {
+func (w *world) toJSON(cc chunkCoords) *worldJSON {
 	return &worldJSON{
 		Event: "game:world",
-		Data:  w.dtodd(),
+		Data:  w.dtodd(cc),
 	}
 }
 

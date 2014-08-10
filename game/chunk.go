@@ -12,15 +12,9 @@ type chunk struct {
 
 type chunkCoords coords
 
-//type item struct {
-//	Coords       chunkCoords `json:"coords"`
-//	materialType `json:"mt"`
-//}
-
 type wireChunk struct {
 	Coords    chunkCoords                  `json:"coords"`
 	Materials [chunkY][chunkX]materialType `json:"m"`
-	//	Items     []item                       `json:"i"`
 }
 
 func (c *chunk) buildChunk(cy int, cx int) *chunk {
@@ -48,7 +42,6 @@ func (c *chunk) toWire() *wireChunk {
 	return &wireChunk{
 		Coords:    c.c,
 		Materials: c.toArray(),
-		//Items:     c.allItems(),
 	}
 }
 

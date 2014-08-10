@@ -1,13 +1,19 @@
 package game
 
-import ()
+import (
+	"math"
+)
 
 const (
 	seed           = 0xDEADBEEF
 	chunkX         = 16
 	chunkY         = 16
-	worldX         = 3 // in chunks, odd
-	worldY         = 3 // in chunks, odd
+	worldX         = math.MaxUint32 // 4294967295
+	worldY         = math.MaxUint32 // 4294967295
+	spawnY         = 11
+	spawnX         = 11
+	losY           = 3
+	losX           = 3
 	depth          = 32
 	defaultDepth   = 16
 	maxEntPerCoord = 16
@@ -16,9 +22,9 @@ const (
 
 type wireConfig struct {
 	Event  string `json:"event"`
-	ChunkX int    `json:"chunk_x"`
 	ChunkY int    `json:"chunk_y"`
-	WorldX int    `json:"world_x"`
-	WorldY int    `json:"world_y"`
+	ChunkX int    `json:"chunk_x"`
+	LosY   int    `json:"los_y"`
+	LosX   int    `json:"los_x"`
 	Id     string `json:"id"`
 }

@@ -3,7 +3,7 @@ world = require('../world');
 
 var configMessage = function (message) {
   config.initConfig(message);
-  world.initWorld(message);
+  world.initLos(message);
 };
 
 module.exports = configMessage;

@@ -1,11 +1,11 @@
-var ID, WORLD_X, WORLD_Y, CHUNK_X, CHUNK_Y;
+var ID, LOS_X, LOS_Y, CHUNK_X, CHUNK_Y;
 
 var initConfig = function (data) {
   window.config.ID = data.id;
-  window.config.WORLD_X = data.world_x;
-  window.config.WORLD_Y = data.world_y;
-  window.config.CHUNK_X = data.chunk_x;
-  window.config.CHUNK_Y = data.chunk_y;
+  window.config.LOS_X = data.los_x; // how many chunks around player to render
+  window.config.LOS_Y = data.los_y; // how many chunks around player to render
+  window.config.CHUNK_X = data.chunk_x; // tiles per chunk
+  window.config.CHUNK_Y = data.chunk_y; // tiles per chunk
 };
 
 var SCENE_WIDTH = 1920;

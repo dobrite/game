@@ -25,10 +25,10 @@ type messageMove struct {
 func buildMessageConfig(id string) string {
 	wc := &wireConfig{
 		Event:  "game:config",
-		ChunkX: chunkX,
 		ChunkY: chunkY,
-		WorldX: worldX,
-		WorldY: worldY,
+		ChunkX: chunkX,
+		LosY:   losY,
+		LosX:   losX,
 		Id:     id,
 	}
 
@@ -36,8 +36,8 @@ func buildMessageConfig(id string) string {
 	return string(c)
 }
 
-func buildMessageWorld() string {
-	msg, _ := json.Marshal(w.toJSON())
+func buildMessageWorld(cc chunkCoords) string {
+	msg, _ := json.Marshal(w.toJSON(cc))
 	return string(msg)
 }
 
