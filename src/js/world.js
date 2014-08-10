@@ -6,7 +6,9 @@ var items = {};
 // tiles
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
 var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
-var itemMesh = new THREE.MeshLambertMaterial({color: 0x5a6acf, shading: THREE.FlatShading});
+
+var playerMesh = new THREE.MeshLambertMaterial({color: 0x5a6acf, shading: THREE.FlatShading});
+var cowMesh = new THREE.MeshLambertMaterial({color: 0x614126, shading: THREE.FlatShading});
 
 var grassMesh = new THREE.MeshLambertMaterial({color: 0x80CF5A, shading: THREE.FlatShading});
 var dirtMesh = new THREE.MeshLambertMaterial({color: 0x96712F, shading: THREE.FlatShading});
@@ -37,10 +39,11 @@ var dirt = isoTile(dirtMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
 var grass = isoTile(grassMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
 var water = isoTile(waterMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
 
-var player = isoItem(itemMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
+var player = isoItem(playerMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
+var cow = isoItem(cowMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
 
 var tileMethods = [nothing, air, dirt, grass, water];
-var itemMethods = [nothing, nothing, nothing, nothing, nothing, player];
+var itemMethods = [nothing, nothing, nothing, nothing, nothing, player, cow];
 
 var initWorld = function (data) {
   world = new Array(data.world_y);
@@ -72,6 +75,7 @@ var renderChunk = function (y, x, chunk) {
       var cube_h = i * config.TILE_HEIGHT;
 
       var tileType = chunk.m[i][j];
+      //console.log(tileType);
       var drawTile = tileMethods[tileType];
       var cube = drawTile(cube_w + offset_x, cube_h + offset_y);
 

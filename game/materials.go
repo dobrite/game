@@ -1,10 +1,6 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
-type materialsMap map[*uuid.UUID]material
+type materialsMap map[string]material
 
 type material struct {
 	materialType
@@ -19,20 +15,21 @@ const (
 	grass
 	water
 	flesh
+	cow
 )
 
-func (m materialsMap) add(ent *uuid.UUID, t materialType) {
+func (m materialsMap) add(ent string, t materialType) {
 	m[ent] = material{
 		materialType: t,
 	}
 }
 
-func (m materialsMap) remove(ent *uuid.UUID) {
+func (m materialsMap) remove(ent string) {
 	delete(m, ent)
 }
 
-func (m materialsMap) byType(t materialType) []*uuid.UUID {
-	var ret []*uuid.UUID
+func (m materialsMap) byType(t materialType) []string {
+	var ret []string
 	for k, v := range materialsSet {
 		if v.materialType == t {
 			ret = append(ret, k)
@@ -41,9 +38,6 @@ func (m materialsMap) byType(t materialType) []*uuid.UUID {
 	return ret
 }
 
-func (m materialsMap) byEnt(ent *uuid.UUID) material {
-	if mat, ok := m[ent]; ok {
-		return mat
-	}
-	return material{nothing}
+func (m materialsMap) byEnt(ent string) material {
+	return m[ent]
 }

@@ -3,15 +3,15 @@ package game
 import ()
 
 const (
-	seed              = 0xDEADBEEF
-	chunkX            = 16
-	chunkY            = 16
-	worldX            = 3 // in chunks, odd
-	worldY            = 3 // in chunks, odd
-	depth             = 32
-	defaultDepth      = 16
-	max_ent_per_coord = 16
-	tickTime          = 200
+	seed           = 0xDEADBEEF
+	chunkX         = 16
+	chunkY         = 16
+	worldX         = 3 // in chunks, odd
+	worldY         = 3 // in chunks, odd
+	depth          = 32
+	defaultDepth   = 16
+	maxEntPerCoord = 16
+	tickTime       = 200
 )
 
 type wireConfig struct {

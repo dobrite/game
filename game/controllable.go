@@ -1,9 +1,5 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
 var controllableSystem controllable
 
 type controllable struct {
@@ -11,12 +7,13 @@ type controllable struct {
 	system
 }
 
-func (c *controllable) enqueue(ent *uuid.UUID, msg messageMove) {
-	entStr := ent.String()
-	c.queue[entStr] = func() {
-		p := positionsSet[entStr]
-		p.move(msg.Y, msg.X)
-		positionsSet[entStr] = p
+func (c *controllable) init() {
+	c.queue = make(map[string]func())
+}
+
+func (c *controllable) enqueue(ent string, msg messageMove) {
+	c.queue[ent] = func() {
+		positionsSet[ent].move(msg.Y, msg.X)
 		reg.publish(buildMessageItem(ent))
 	}
 }

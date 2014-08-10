@@ -1,15 +1,11 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
 type session struct {
 	*connection
-	id *uuid.UUID
+	id string
 }
 
-func newSession(id *uuid.UUID, transport transport, toConn chan string, toGame chan string) *session {
+func newSession(id string, transport transport, toConn chan string, toGame chan string) *session {
 	conn := &connection{
 		trans:  transport,
 		toConn: toConn,

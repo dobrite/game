@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/nu7hatch/gouuid"
-	"log"
 )
 
 type message struct {
-	id      *uuid.UUID
+	id      string
 	message interface{}
 }
 
@@ -23,15 +22,14 @@ type messageMove struct {
 	X int `json:"x"`
 }
 
-func buildMessageConfig(id *uuid.UUID) string {
-	log.Println(id)
+func buildMessageConfig(id string) string {
 	wc := &wireConfig{
 		Event:  "game:config",
 		ChunkX: chunkX,
 		ChunkY: chunkY,
 		WorldX: worldX,
 		WorldY: worldY,
-		Id:     id.String(),
+		Id:     id,
 	}
 
 	c, _ := json.Marshal(wc)
@@ -43,7 +41,7 @@ func buildMessageWorld() string {
 	return string(msg)
 }
 
-func buildMessageItem(ent *uuid.UUID) string {
+func buildMessageItem(ent string) string {
 	i := &item{
 		id:       ent,
 		position: positionsSet.byEnt(ent),
@@ -73,7 +71,7 @@ func MessageUnmarshalJSON(b []byte) (msg message, err error) {
 		}
 		msg = message{
 			message: msgMove,
-			id:      u4,
+			id:      u4.String(),
 		}
 	default:
 		err = fmt.Errorf("%s is not a recognized event", event.Event)

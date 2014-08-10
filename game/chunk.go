@@ -2,11 +2,10 @@ package game
 
 import (
 	"encoding/json"
-	"github.com/nu7hatch/gouuid"
 )
 
 type chunk struct {
-	a [chunkY][chunkY][]*uuid.UUID
+	a [chunkY][chunkY][]string
 	c chunkCoords
 	json.Marshaler
 }
@@ -27,18 +26,8 @@ type wireChunk struct {
 func (c *chunk) buildChunk(cy int, cx int) *chunk {
 	for y := 0; y < chunkY; y++ {
 		for x := 0; x < chunkX; x++ {
-			c.a[y][x] = make([]*uuid.UUID, max_ent_per_coord)
-
-			var mat materialType
-			if coinFlip() {
-				mat = grass
-			} else {
-				mat = dirt
-			}
-
-			t := makeTile(y, x, cy, cx, mat)
-			entities = append(entities, t)
-			c.a[y][x][0] = t
+			c.a[y][x] = make([]string, maxEntPerCoord)
+			c.a[y][x][0] = makeTile(y, x, cy, cx, materialType(d(2)+2))
 		}
 	}
 	c.c = chunkCoords{cy, cx}

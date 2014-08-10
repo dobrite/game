@@ -7,40 +7,40 @@ import (
 	"time"
 )
 
+var trashRand *rand.Rand
+
 var positionsSet positionsMap
 var materialsSet materialsMap
 var controlledSet controlledMap
-var entities []*uuid.UUID
+var brainSet brainMap
+var entitiesSet []string
 var reg *registry
 
 type coords [2]int
 
-type Game struct {
-	positionsMap
-	materialsMap
-	movable
-	strategy
-}
+type Game struct{}
 
-func newUUID() *uuid.UUID {
+func newUUID() string {
 	u4, err := uuid.NewV4()
 	if err != nil {
 		panic("uuid failed")
 	}
-	return u4
+	entitiesSet = append(entitiesSet, u4.String())
+	return u4.String()
 }
 
-func coinFlip() bool {
-	if rand.Float32() <= 0.5 {
-		return false
-	} else {
-		return true
-	}
+func d(n int) int {
+	return rand.Intn(n)
+}
+
+func trashD(n int) int {
+	return trashRand.Intn(n)
 }
 
 func pump() {
 	for _ = range time.Tick(tickTime * time.Millisecond) {
 		controllableSystem.run()
+		brainableSystem.run()
 		for k, v := range reg.commands {
 			v()
 			delete(reg.commands, k)
@@ -51,18 +51,28 @@ func pump() {
 }
 
 func init() {
+	entitiesSet = make([]string, 200000)
 	positionsSet = make(positionsMap)
 	materialsSet = make(materialsMap)
-	entities = make([]*uuid.UUID, 200000)
 	controlledSet = make(controlledMap)
-	controllableSystem.queue = make(map[string]func())
+	brainSet = make(brainMap)
 }
 
 func (g *Game) Init() {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
+	trashRand = rand.New(rand.NewSource(rand.Int63()))
 	w.buildWorld()
 	reg = newRegistry()
-	//init systems
+
+	controllableSystem.init()
+	brainableSystem.init()
+
+	id := newUUID()
+	positionsSet.add(id, 12, 12, 0, 0)
+	materialsSet.add(id, cow)
+	brainSet.add(id, random)
+
+	// TODO init systems
 	go pump()
 }

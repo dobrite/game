@@ -91,4 +91,5 @@ func (h *Handler) teardown(session *session) {
 	positionsSet.remove(session.id)
 	materialsSet.remove(session.id)
 	controlledSet.remove(session.id)
+	// TODO broadcast exit message to world - update js client to remove
 }

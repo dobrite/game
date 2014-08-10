@@ -1,17 +1,13 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
 type positionsMap map[string]*position
 
 type position struct {
 	y, x, z, cy, cx int
 }
 
-func (p positionsMap) add(ent *uuid.UUID, y, x, cy, cx int) {
-	p[ent.String()] = &position{
+func (p positionsMap) add(ent string, y, x, cy, cx int) {
+	p[ent] = &position{
 		y:  y,
 		x:  x,
 		z:  defaultDepth,
@@ -20,16 +16,12 @@ func (p positionsMap) add(ent *uuid.UUID, y, x, cy, cx int) {
 	}
 }
 
-func (p positionsMap) remove(ent *uuid.UUID) {
-	delete(p, ent.String())
+func (p positionsMap) remove(ent string) {
+	delete(p, ent)
 }
 
-func (p positionsMap) byEnt(ent *uuid.UUID) *position {
-	pos, ok := p[ent.String()]
-	if !ok {
-		panic("oh noes!")
-	}
-	return pos
+func (p positionsMap) byEnt(ent string) *position {
+	return p[ent]
 }
 
 func (p *position) toWorldCoords() *worldCoords {
@@ -49,6 +41,7 @@ func (p *position) move(y, x int) {
 	} else {
 		p.x = p.x + x
 	}
+
 	if p.y+y > chunkY {
 		p.cy = p.cy + 1
 		p.y = 0

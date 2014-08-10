@@ -2,14 +2,13 @@ package game
 
 import (
 	"github.com/deckarep/golang-set"
-	"github.com/nu7hatch/gouuid"
 	"gopkg.in/tomb.v2"
 )
 
 //TODO move mapset to clipperhouse.github.io/gen
 type registry struct {
 	sessionIds mapset.Set
-	sessions   map[*uuid.UUID]*session
+	sessions   map[string]*session
 	command    chan func()
 	commands   map[string]func()
 	t          tomb.Tomb
@@ -18,7 +17,7 @@ type registry struct {
 func newRegistry() *registry {
 	registry := &registry{
 		sessionIds: mapset.NewThreadUnsafeSet(),
-		sessions:   make(map[*uuid.UUID]*session),
+		sessions:   make(map[string]*session),
 		command:    make(chan func()),
 		commands:   make(map[string]func()),
 	}
@@ -42,7 +41,7 @@ func (r *registry) publish(payload string) {
 		s := r.sessionIds.Iter()
 		for sId := range s {
 			// whole server can be blocked by a slow client
-			r.sessions[sId.(*uuid.UUID)].toConn <- payload
+			r.sessions[sId.(string)].toConn <- payload
 		}
 	}
 }

@@ -1,11 +1,7 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
 type item struct {
-	id       *uuid.UUID
+	id       string
 	position *position
 	material material
 }
@@ -20,7 +16,7 @@ type itemJSON struct {
 func (i *item) toJSON() *itemJSON {
 	return &itemJSON{
 		Event:        "game:item",
-		Id:           i.id.String(),
+		Id:           i.id,
 		WorldCoords:  i.position.toWorldCoords(),
 		MaterialType: i.material.materialType,
 	}

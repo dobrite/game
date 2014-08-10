@@ -1,23 +1,17 @@
 package game
 
-import (
-	"github.com/nu7hatch/gouuid"
-)
-
-type controlledMap map[*uuid.UUID]controlled
+type controlledMap map[string]controlled
 
 type controlled struct {
-	controller controller
+	controller string
 }
 
-type controller *uuid.UUID
-
-func (c controlledMap) add(ent *uuid.UUID) {
+func (c controlledMap) add(ent string) {
 	c[ent] = controlled{
 		controller: ent,
 	}
 }
 
-func (c controlledMap) remove(ent *uuid.UUID) {
+func (c controlledMap) remove(ent string) {
 	delete(c, ent)
 }
