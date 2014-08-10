@@ -40,16 +40,6 @@ var mesh = function (geo, mesh) {
   };
 };
 
-var itemFactory = function (itemGeo, mesh) {
-  return function(x, y) {
-    var item = new THREE.Mesh(itemGeo, mesh);
-    item.position.x = x + config.TILE_WIDTH / 2;
-    item.position.y = config.TILE_HEIGHT;
-    item.position.z = y + config.TILE_DEPTH / 2;
-    return item;
-  };
-};
-
 var nothing = function(){};
 var air = function(){};
 var dirt = cubeFactory(cubeGeo, buildMesh(0x96712F));
