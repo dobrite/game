@@ -10,15 +10,9 @@ var items = {};
 // #53A976
 // #98CF6F
 // #EFEE69
+
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
 var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
-
-var playerMesh = buildMesh(0x5a6acf);
-var cowMesh = buildMesh(0x614126);
-
-var grassMesh = buildMesh(0x80CF5A);
-var dirtMesh = buildMesh(0x96712F);
-var waterMesh = buildMesh(0x85b9bb);
 
 function buildMesh(color) {
   return new THREE.MeshLambertMaterial({
@@ -48,12 +42,12 @@ function itemFactory(mesh) {
 
 var nothing = function(){};
 var air = function(){};
-var dirt = cubeFactory(dirtMesh);
-var grass = cubeFactory(grassMesh);
-var water = cubeFactory(waterMesh);
+var dirt = cubeFactory(buildMesh(0x96712F));
+var grass = cubeFactory(buildMesh(0x80CF5A));
+var water = cubeFactory(buildMesh(0x85b9bb));
 
-var player = itemFactory(playerMesh);
-var cow = itemFactory(cowMesh);
+var player = itemFactory(buildMesh(0x5a6acf));
+var cow = itemFactory(buildMesh(0x614126));
 
 var tileMethods = [nothing, air, dirt, grass, water];
 var itemMethods = [nothing, nothing, nothing, nothing, nothing, player, cow];
