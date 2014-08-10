@@ -59,10 +59,9 @@ var renderChunk = function (y, x, chunk) {
   }
 };
 
-var renderItem = function (id, y, x, cy, cx, material_type) {
+var renderItem = function (id, y, x, cy, cx, materialType) {
   var offset_y = (cy - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
   var offset_x = (cx - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
-  var itemType = material_type;
 
   var cube_w = y * config.TILE_WIDTH;
   var cube_h = x * config.TILE_HEIGHT;
@@ -70,17 +69,18 @@ var renderItem = function (id, y, x, cy, cx, material_type) {
   y = cube_w + config.TILE_HEIGHT/4 + offset_y;
   x = cube_h + config.TILE_WIDTH/4 + offset_x;
 
-  var drawItem = models.itemFunctions[itemType];
   var item = items[id];
+
   if (item === undefined) {
-    var itemMesh = drawItem(x, y);
-    items[id] = itemMesh;
-    scene.add(itemMesh);
-  } else {
-    item.position.x = x + 16;
-    item.position.y = 32;
-    item.position.z = y + 16;
+    var drawItem = models.itemFunctions[materialType];
+    item = drawItem(x, y);
+    items[id] = item;
+    scene.add(item);
   }
+
+  item.position.x = x + config.TILE_WIDTH / 2;
+  item.position.y = config.TILE_HEIGHT;
+  item.position.z = y + config.TILE_DEPTH / 2;
 };
 
 module.exports = {
