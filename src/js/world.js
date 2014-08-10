@@ -3,7 +3,7 @@ var scene = require('./scene');
 var world;
 var items = {};
 
-// tiles
+// grass tiles
 // #21313E
 // #20575F
 // #268073
@@ -14,23 +14,23 @@ var items = {};
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
 var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
 
-function buildMesh(color) {
+var buildMesh = function (color) {
   return new THREE.MeshLambertMaterial({
     color: color,
     shading: THREE.FlatShading,
   });
-}
+};
 
-function cubeFactory(mesh) {
+var cubeFactory = function (mesh) {
   return function(x, y) {
     var cube = new THREE.Mesh(cubeGeo, mesh);
     cube.position.x = x + 16;
     cube.position.z = y + 16;
     return cube;
   };
-}
+};
 
-function itemFactory(mesh) {
+var itemFactory = function (mesh) {
   return function(x, y) {
     var item = new THREE.Mesh(itemGeo, mesh);
     item.position.x = x + 16;
@@ -38,7 +38,7 @@ function itemFactory(mesh) {
     item.position.z = y + 16;
     return item;
   };
-}
+};
 
 var nothing = function(){};
 var air = function(){};
@@ -72,6 +72,14 @@ var initTiles = function (y, x) {
   return tiles;
 };
 
+var render = function (chunks) {
+  for (var y = 0; y < config.WORLD_Y; y++) {
+    for (var x = 0; x < config.WORLD_X; x++) {
+      renderChunk(y, x, chunks[y][x]);
+    }
+  }
+};
+
 var renderChunk = function (y, x, chunk) {
   var offset_y = chunk.coords[0] * config.CHUNK_Y * config.TILE_HEIGHT;
   var offset_x = chunk.coords[1] * config.CHUNK_X * config.TILE_WIDTH;
@@ -96,15 +104,7 @@ var renderChunk = function (y, x, chunk) {
   }
 };
 
-var render = function (chunks) {
-  for (var y = 0; y < config.WORLD_Y; y++) {
-    for (var x = 0; x < config.WORLD_X; x++) {
-      renderChunk(y, x, chunks[y][x]);
-    }
-  }
-};
-
-function renderItem(itemMsg) {
+var renderItem = function (itemMsg) {
   // TODO this shouldn't know about itemMsg but w/e
   var y = itemMsg.world_coords.coords[0];
   var x = itemMsg.world_coords.coords[1];
@@ -131,8 +131,7 @@ function renderItem(itemMsg) {
     item.position.y = 32;
     item.position.z = y + 16;
   }
-}
-
+};
 
 module.exports = {
   world: world,
