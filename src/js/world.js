@@ -45,15 +45,16 @@ var renderChunk = function (y, x, chunk) {
       var cube_w = j * config.TILE_WIDTH;
       var cube_h = i * config.TILE_HEIGHT;
 
-      var tileType = chunk.m[i][j];
-      var drawTile = models.tileFunctions[tileType];
-      var cube = drawTile(cube_w + offset_x, cube_h + offset_y);
+      var cube = los[y][x][i][j];
 
-      if (los[y][x][i][j] === undefined) {
+      if (cube === undefined) {
+        var tileType = chunk.m[i][j];
+        var drawFunction = models.meshFunctions[tileType];
+        cube = drawFunction();
         los[y][x][i][j] = cube;
+        cube.position.x = cube_w + offset_x + config.TILE_WIDTH / 2;
+        cube.position.z = cube_h + offset_y + config.TILE_DEPTH / 2;
         scene.add(cube);
-      } else {
-        //nothing for now
       }
     }
   }
@@ -72,8 +73,8 @@ var renderItem = function (id, y, x, cy, cx, materialType) {
   var item = items[id];
 
   if (item === undefined) {
-    var drawItem = models.itemFunctions[materialType];
-    item = drawItem(x, y);
+    var drawFunction = models.meshFunctions[materialType];
+    item = drawFunction();
     items[id] = item;
     scene.add(item);
   }
