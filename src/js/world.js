@@ -4,17 +4,30 @@ var world;
 var items = {};
 
 // tiles
+// #21313E
+// #20575F
+// #268073
+// #53A976
+// #98CF6F
+// #EFEE69
 var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
 var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
 
-var playerMesh = new THREE.MeshLambertMaterial({color: 0x5a6acf, shading: THREE.FlatShading});
-var cowMesh = new THREE.MeshLambertMaterial({color: 0x614126, shading: THREE.FlatShading});
+var playerMesh = buildMesh(0x5a6acf);
+var cowMesh = buildMesh(0x614126);
 
-var grassMesh = new THREE.MeshLambertMaterial({color: 0x80CF5A, shading: THREE.FlatShading});
-var dirtMesh = new THREE.MeshLambertMaterial({color: 0x96712F, shading: THREE.FlatShading});
-var waterMesh = new THREE.MeshLambertMaterial({color: 0x85b9bb, shading: THREE.FlatShading});
+var grassMesh = buildMesh(0x80CF5A);
+var dirtMesh = buildMesh(0x96712F);
+var waterMesh = buildMesh(0x85b9bb);
 
-function isoTile(mesh, w, h) {
+function buildMesh(color) {
+  return new THREE.MeshLambertMaterial({
+    color: color,
+    shading: THREE.FlatShading,
+  });
+}
+
+function cubeFactory(mesh) {
   return function(x, y) {
     var cube = new THREE.Mesh(cubeGeo, mesh);
     cube.position.x = x + 16;
@@ -23,7 +36,7 @@ function isoTile(mesh, w, h) {
   };
 }
 
-function isoItem(mesh, w, h) {
+function itemFactory(mesh) {
   return function(x, y) {
     var item = new THREE.Mesh(itemGeo, mesh);
     item.position.x = x + 16;
@@ -35,12 +48,12 @@ function isoItem(mesh, w, h) {
 
 var nothing = function(){};
 var air = function(){};
-var dirt = isoTile(dirtMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
-var grass = isoTile(grassMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
-var water = isoTile(waterMesh, config.TILE_WIDTH, config.TILE_HEIGHT);
+var dirt = cubeFactory(dirtMesh);
+var grass = cubeFactory(grassMesh);
+var water = cubeFactory(waterMesh);
 
-var player = isoItem(playerMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
-var cow = isoItem(cowMesh, config.TILE_WIDTH/2, config.TILE_HEIGHT/2);
+var player = itemFactory(playerMesh);
+var cow = itemFactory(cowMesh);
 
 var tileMethods = [nothing, air, dirt, grass, water];
 var itemMethods = [nothing, nothing, nothing, nothing, nothing, player, cow];
