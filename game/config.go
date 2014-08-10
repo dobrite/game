@@ -22,9 +22,9 @@ const (
 
 type wireConfig struct {
 	Event  string `json:"event"`
-	ChunkY int    `json:"chunk_y"`
-	ChunkX int    `json:"chunk_x"`
-	LosY   int    `json:"los_y"`
-	LosX   int    `json:"los_x"`
+	ChunkY int    `json:"chunkY"`
+	ChunkX int    `json:"chunkX"`
+	LosY   int    `json:"losY"`
+	LosX   int    `json:"losX"`
 	Id     string `json:"id"`
 }

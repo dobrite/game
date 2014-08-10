@@ -37,13 +37,13 @@ var offset = function (y, x) {
 
 var renderChunk = function (y, x, chunk) {
   //y, x are los, i.e. los 3,3 [[0,0],[0,1]...[2,2]]
-  var offset_y = (y - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
-  var offset_x = (x - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
+  var offsetY = (y - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
+  var offsetX = (x - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
 
   for (var i = 0; i < config.CHUNK_Y; i++) {
     for (var j = 0; j < config.CHUNK_X; j++) {
-      var cube_w = j * config.TILE_WIDTH;
-      var cube_h = i * config.TILE_HEIGHT;
+      var cubeX = j * config.TILE_WIDTH;
+      var cubeY = i * config.TILE_HEIGHT;
 
       var cube = los[y][x][i][j];
 
@@ -55,22 +55,22 @@ var renderChunk = function (y, x, chunk) {
         scene.add(cube);
       }
 
-      cube.position.x = cube_w + offset_x + config.TILE_WIDTH / 2;
-      cube.position.z = cube_h + offset_y + config.TILE_DEPTH / 2;
+      cube.position.x = cubeX + offsetX + config.TILE_WIDTH / 2;
+      cube.position.z = cubeY + offsetY + config.TILE_DEPTH / 2;
     }
   }
 };
 
 var renderItem = function (id, y, x, cy, cx, materialType) {
   //cy, cx are world coords
-  var offset_y = (cy - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
-  var offset_x = (cx - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
+  var offsetY = (cy - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
+  var offsetX = (cx - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
 
-  var cube_w = y * config.TILE_WIDTH;
-  var cube_h = x * config.TILE_HEIGHT;
+  var cubeY = y * config.TILE_WIDTH;
+  var cubeX = x * config.TILE_HEIGHT;
 
-  y = cube_w + config.TILE_HEIGHT/4 + offset_y;
-  x = cube_h + config.TILE_WIDTH/4 + offset_x;
+  y = cubeY + config.TILE_HEIGHT/4 + offsetY;
+  x = cubeX + config.TILE_WIDTH/4 + offsetX;
 
   var item = items[id];
 
