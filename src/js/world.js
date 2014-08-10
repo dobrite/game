@@ -90,7 +90,6 @@ var renderChunk = function (y, x, chunk) {
       var cube_h = i * config.TILE_HEIGHT;
 
       var tileType = chunk.m[i][j];
-      //console.log(tileType);
       var drawTile = tileMethods[tileType];
       var cube = drawTile(cube_w + offset_x, cube_h + offset_y);
 
