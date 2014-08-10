@@ -8,17 +8,12 @@ var initConfig = function (data) {
   window.config.CHUNK_Y = data.chunk_y; // tiles per chunk
 };
 
-var SCENE_WIDTH = 1920;
-var SCENE_HEIGHT = 1024;
-
-var TILE_HEIGHT =  32;
-var TILE_WIDTH = 32;
-
 window.config = {
-  SCENE_WIDTH: SCENE_WIDTH,
-  SCENE_HEIGHT: SCENE_HEIGHT,
-  TILE_WIDTH: TILE_WIDTH,
-  TILE_HEIGHT: TILE_HEIGHT,
+  SCENE_WIDTH: 1640,
+  SCENE_HEIGHT: 1024,
+  TILE_WIDTH: 32, // x
+  TILE_HEIGHT: 32, // y
+  TILE_DEPTH: 32, // z (right now y) north is -Z
 };
 
 module.exports = {

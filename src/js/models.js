@@ -6,8 +6,17 @@
 // #98CF6F
 // #EFEE69
 
-var itemGeo = new THREE.BoxGeometry(config.TILE_WIDTH/2, 16, config.TILE_HEIGHT/2);
-var cubeGeo = new THREE.BoxGeometry(config.TILE_WIDTH, 32, config.TILE_HEIGHT);
+var itemGeo = new THREE.BoxGeometry(
+  config.TILE_WIDTH / 2, // x
+  config.TILE_HEIGHT / 2, // y
+  config.TILE_DEPTH / 2 // z
+);
+
+var cubeGeo = new THREE.BoxGeometry(
+  config.TILE_WIDTH, // x
+  config.TILE_HEIGHT, // y
+  config.TILE_DEPTH // z
+);
 
 var buildMesh = function (color) {
   return new THREE.MeshLambertMaterial({
@@ -19,8 +28,8 @@ var buildMesh = function (color) {
 var cubeFactory = function (mesh) {
   return function(x, y) {
     var cube = new THREE.Mesh(cubeGeo, mesh);
-    cube.position.x = x + 16;
-    cube.position.z = y + 16;
+    cube.position.x = x + config.TILE_WIDTH / 2;
+    cube.position.z = y + config.TILE_DEPTH / 2;
     return cube;
   };
 };
@@ -28,9 +37,9 @@ var cubeFactory = function (mesh) {
 var itemFactory = function (mesh) {
   return function(x, y) {
     var item = new THREE.Mesh(itemGeo, mesh);
-    item.position.x = x + 16;
-    item.position.y = 32;
-    item.position.z = y + 16;
+    item.position.x = x + config.TILE_WIDTH / 2;
+    item.position.y = config.TILE_HEIGHT;
+    item.position.z = y + config.TILE_DEPTH / 2;
     return item;
   };
 };
