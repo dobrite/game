@@ -1,5 +1,3 @@
-var ID, LOS_X, LOS_Y, CHUNK_X, CHUNK_Y;
-
 var initConfig = function (data) {
   window.config.ID = data.id;
   window.config.LOS_X = data.los_x; // how many chunks around player to render
