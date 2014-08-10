@@ -9,6 +9,7 @@ type brainable struct {
 
 func (b *brainable) init() {
 	b.strategyFunctions = make(map[strategy]func(*position))
+	b.strategyFunctions[rock] = rockBrain()
 	b.strategyFunctions[random] = randomBrain(10)
 }
 

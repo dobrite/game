@@ -78,6 +78,26 @@ func (g *Game) Init() {
 	materialsSet.add(id, pig)
 	brainSet.add(id, random)
 
+	id = newUUID()
+	positionsSet.add(id, 0, 0, 0, 0)
+	materialsSet.add(id, stone)
+	brainSet.add(id, rock)
+
+	id = newUUID()
+	positionsSet.add(id, 0, 0, 1, 1)
+	materialsSet.add(id, stone)
+	brainSet.add(id, rock)
+
+	id = newUUID()
+	positionsSet.add(id, 0, 0, 0, 1)
+	materialsSet.add(id, stone)
+	brainSet.add(id, rock)
+
+	id = newUUID()
+	positionsSet.add(id, 0, 0, 1, 0)
+	materialsSet.add(id, stone)
+	brainSet.add(id, rock)
+
 	// TODO init systems
 	go pump()
 }

@@ -2,7 +2,6 @@ package game
 
 import (
 	"encoding/json"
-	"math"
 )
 
 var w world
@@ -28,8 +27,8 @@ func (w *world) init() {
 }
 
 func (w *world) buildSpawn(spawnY, spawnX int) {
-	offsetY := int(math.Floor(float64(spawnY) / 2))
-	offsetX := int(math.Floor(float64(spawnX) / 2))
+	offsetY := div2(spawnY)
+	offsetX := div2(spawnX)
 
 	for y := 0; y < spawnY; y++ {
 		for x := 0; x < spawnX; x++ {
@@ -41,33 +40,28 @@ func (w *world) buildSpawn(spawnY, spawnX int) {
 }
 
 // TODO make w.chunks[cc] getter which will init chunk if not in map
-func (w *world) dtodd(cc chunkCoords) [][]*chunk {
+func (w *world) los(cc chunkCoords) [][]*chunk {
 	py := cc[0]
 	px := cc[1]
 
-	offsetY := int(math.Floor(float64(losY) / 2))
-	offsetX := int(math.Floor(float64(losX) / 2))
+	offsetY := div2(losY)
+	offsetX := div2(losX)
 
-	base := make([]*chunk, losY*losX)
-	outer := make([][]*chunk, losY)
-	for y := range outer {
-		outer[y] = base[y*losX : (y+1)*losX]
-		for x := range outer[y] {
+	straight := make([]*chunk, losY*losX)
+	grid := make([][]*chunk, losY)
+	for y := range grid {
+		grid[y] = straight[y*losX : (y+1)*losX]
+		for x := range grid[y] {
 			cc := chunkCoords{y + py - offsetY, x + px - offsetX}
-			outer[y][x] = w.chunks[cc]
+			grid[y][x] = w.chunks[cc]
 		}
 	}
-	return outer
+	return grid
 }
 
 func (w *world) toJSON(cc chunkCoords) *worldJSON {
 	return &worldJSON{
-		Event: "game:world",
-		Data:  w.dtodd(cc),
+		Event: "game:los",
+		Data:  w.los(cc),
 	}
 }
-
-//func (w *world) MarshalJSON() ([]byte, error) {
-//	log.Println(w)
-//	return json.Marshal(w.toJSON())
-//}

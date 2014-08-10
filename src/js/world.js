@@ -52,15 +52,17 @@ var renderChunk = function (y, x, chunk) {
         var drawFunction = models.meshFunctions[tileType];
         cube = drawFunction();
         los[y][x][i][j] = cube;
-        cube.position.x = cube_w + offset_x + config.TILE_WIDTH / 2;
-        cube.position.z = cube_h + offset_y + config.TILE_DEPTH / 2;
         scene.add(cube);
       }
+
+      cube.position.x = cube_w + offset_x + config.TILE_WIDTH / 2;
+      cube.position.z = cube_h + offset_y + config.TILE_DEPTH / 2;
     }
   }
 };
 
 var renderItem = function (id, y, x, cy, cx, materialType) {
+  //cy, cx are world coords
   var offset_y = (cy - Math.floor(config.LOS_Y / 2)) * config.CHUNK_Y * config.TILE_HEIGHT;
   var offset_x = (cx - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
 

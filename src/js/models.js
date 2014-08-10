@@ -41,6 +41,7 @@ var meshFactory = function (geo, mesh) {
 var dirt = meshFactory(cubeGeo, buildMesh(0x96712F));
 var grass = meshFactory(cubeGeo, buildMesh(0x80CF5A));
 var water = meshFactory(cubeGeo, buildMesh(0x85b9bb));
+var stone = meshFactory(itemGeo, buildMesh(0xCCCCCC));
 var player = meshFactory(itemGeo, buildMesh(0x5a6acf));
 var cow = meshFactory(itemGeo, buildMesh(0x614126));
 var pig = meshFactory(itemGeo, buildMesh(0xFCD7DE));

@@ -14,6 +14,7 @@ const (
 	dirt
 	grass
 	water
+	stone
 	flesh
 	cow
 	pig

@@ -9,7 +9,8 @@ type brain struct {
 }
 
 const (
-	random = iota
+	rock = iota
+	random
 )
 
 func (b brainMap) add(ent string, strat strategy) {
@@ -31,5 +32,10 @@ func randomBrain(delay int) func(*position) {
 		if trashD(delay) == 0 {
 			pos.move(trashD(3)-1, trashD(3)-1)
 		}
+	}
+}
+
+func rockBrain() func(*position) {
+	return func(pos *position) {
 	}
 }

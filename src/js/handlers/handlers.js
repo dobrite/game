@@ -4,7 +4,7 @@ var configMessage = require('./configMessage'),
 
 var messageToHandler = {
   "game:config": configMessage,
-  "game:world": worldMessage,
+  "game:los": worldMessage,
   "game:item": itemMessage,
 };
 
