@@ -5,7 +5,7 @@ import (
 )
 
 type chunk struct {
-	a [chunkY][chunkY][]string
+	a [chunkZ][chunkX][]string
 	c chunkCoords
 	json.Marshaler
 }
@@ -14,25 +14,25 @@ type chunkCoords coords
 
 type wireChunk struct {
 	Coords    chunkCoords                  `json:"coords"`
-	Materials [chunkY][chunkX]materialType `json:"m"`
+	Materials [chunkZ][chunkX]materialType `json:"m"`
 }
 
-func (c *chunk) buildChunk(cy int, cx int) *chunk {
-	for y := 0; y < chunkY; y++ {
+func (c *chunk) buildChunk(cz int, cx int) *chunk {
+	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
-			c.a[y][x] = make([]string, maxEntPerCoord)
-			c.a[y][x][0] = makeTile(y, x, cy, cx, materialType(d(2)+2))
+			c.a[z][x] = make([]string, maxEntPerCoord)
+			c.a[z][x][0] = makeTile(z, x, cz, cx, materialType(d(2)+2))
 		}
 	}
-	c.c = chunkCoords{cy, cx}
+	c.c = chunkCoords{cz, cx}
 	return c
 }
 
-func (c *chunk) toArray() [chunkY][chunkX]materialType {
-	var arr [chunkY][chunkX]materialType
-	for y := 0; y < chunkY; y++ {
+func (c *chunk) toArray() [chunkZ][chunkX]materialType {
+	var arr [chunkZ][chunkX]materialType
+	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
-			arr[y][x] = materialsSet[c.a[y][x][0]].materialType
+			arr[z][x] = materialsSet[c.a[z][x][0]].materialType
 		}
 	}
 	return arr

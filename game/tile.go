@@ -1,9 +1,9 @@
 package game
 
-func makeTile(y, x, cy, cx int, t materialType) string {
+func makeTile(z, x, cz, cx int, t materialType) string {
 	ent := newUUID()
 
-	positionsSet.add(ent, y, x, cy, cx)
+	positionsSet.add(ent, z, x, cz, cx)
 	materialsSet.add(ent, t)
 
 	return ent

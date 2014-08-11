@@ -6,13 +6,13 @@ import (
 
 const (
 	seed           = 0xDEADBEEF
-	chunkY         = 16
+	chunkZ         = 16
 	chunkX         = 16
-	worldY         = math.MaxUint32 // 4294967295
+	worldZ         = math.MaxUint32 // 4294967295
 	worldX         = math.MaxUint32 // 4294967295
-	spawnY         = 11
+	spawnZ         = 11
 	spawnX         = 11
-	losY           = 3
+	losZ           = 3
 	losX           = 3
 	depth          = 32
 	defaultDepth   = 16
@@ -22,9 +22,9 @@ const (
 
 type wireConfig struct {
 	Event  string `json:"event"`
-	ChunkY int    `json:"chunkY"`
+	ChunkZ int    `json:"chunkZ"`
 	ChunkX int    `json:"chunkX"`
-	LosY   int    `json:"losY"`
+	LosZ   int    `json:"losZ"`
 	LosX   int    `json:"losX"`
 	Id     string `json:"id"`
 }

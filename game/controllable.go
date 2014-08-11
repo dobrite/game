@@ -13,7 +13,7 @@ func (c *controllable) init() {
 
 func (c *controllable) enqueue(ent string, msg messageMove) {
 	c.queue[ent] = func() {
-		positionsSet[ent].move(msg.Y, msg.X)
+		positionsSet[ent].move(msg.Z, msg.X)
 		reg.publish(buildMessageItem(ent))
 	}
 }

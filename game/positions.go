@@ -3,15 +3,15 @@ package game
 type positionsMap map[string]*position
 
 type position struct {
-	y, x, z, cy, cx int
+	z, x, y, cz, cx int
 }
 
-func (p positionsMap) add(ent string, y, x, cy, cx int) {
+func (p positionsMap) add(ent string, z, x, cz, cx int) {
 	p[ent] = &position{
-		y:  y,
+		z:  z,
 		x:  x,
-		z:  defaultDepth,
-		cy: cy,
+		y:  defaultDepth,
+		cz: cz,
 		cx: cx,
 	}
 }
@@ -26,12 +26,12 @@ func (p positionsMap) byEnt(ent string) *position {
 
 func (p *position) toWorldCoords() *worldCoords {
 	return &worldCoords{
-		ChunkCoords: coords{p.cy, p.cx},
-		Coords:      coords{p.y, p.x},
+		ChunkCoords: coords{p.cz, p.cx},
+		Coords:      coords{p.z, p.x},
 	}
 }
 
-func (p *position) move(y, x int) {
+func (p *position) move(z, x int) {
 	if p.x+x > chunkX {
 		p.cx = p.cx + 1
 		p.x = 0
@@ -42,13 +42,13 @@ func (p *position) move(y, x int) {
 		p.x = p.x + x
 	}
 
-	if p.y+y > chunkY {
-		p.cy = p.cy + 1
-		p.y = 0
-	} else if p.y+y < 0 {
-		p.cy = p.cy - 1
-		p.y = chunkY
+	if p.z+z > chunkZ {
+		p.cz = p.cz + 1
+		p.z = 0
+	} else if p.z+z < 0 {
+		p.cz = p.cz - 1
+		p.z = chunkZ
 	} else {
-		p.y = p.y + y
+		p.z = p.z + z
 	}
 }

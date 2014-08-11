@@ -18,16 +18,16 @@ type messageEvent struct {
 }
 
 type messageMove struct {
-	Y int `json:"y"`
+	Z int `json:"z"`
 	X int `json:"x"`
 }
 
 func buildMessageConfig(id string) string {
 	wc := &wireConfig{
 		Event:  "game:config",
-		ChunkY: chunkY,
+		ChunkZ: chunkZ,
 		ChunkX: chunkX,
-		LosY:   losY,
+		LosZ:   losZ,
 		LosX:   losX,
 		Id:     id,
 	}

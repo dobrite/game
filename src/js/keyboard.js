@@ -1,20 +1,20 @@
 var connection = require('./connection'),
     messages = require('./messages');
 
-function moveAvatar(y, x) {
-  connection.send(JSON.stringify(messages.buildMove(y, x)));
+function moveAvatar(z, x) {
+  connection.send(JSON.stringify(messages.buildMove(z, x)));
 }
 
-function moveUp(e) {
+function moveUp() {
   moveAvatar(-1, 0);
 }
-function moveDown(e) {
+function moveDown() {
   moveAvatar(1, 0);
 }
-function moveLeft(e) {
+function moveLeft() {
   moveAvatar(0, -1);
 }
-function moveRight(e) {
+function moveRight() {
   moveAvatar(0, 1);
 }
 

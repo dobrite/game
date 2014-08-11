@@ -2,6 +2,7 @@ var projector = require('./projector'),
     camera = require('./camera'),
     renderer = require('./renderer');
 
+// didn't convert Y to Z
 renderer.domElement.addEventListener('mousedown', function (event) {
   var vector = new THREE.Vector3(
     renderer.devicePixelRatio * (event.pageX - this.offsetLeft) / this.width * 2 - 1,

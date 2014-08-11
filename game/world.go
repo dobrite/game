@@ -23,37 +23,37 @@ type worldCoords struct {
 
 func (w *world) init() {
 	w.chunks = make(map[chunkCoords]*chunk)
-	w.buildSpawn(spawnX, spawnY)
+	w.buildSpawn(spawnZ, spawnX)
 }
 
-func (w *world) buildSpawn(spawnY, spawnX int) {
-	offsetY := div2(spawnY)
+func (w *world) buildSpawn(spawnZ, spawnX int) {
+	offsetZ := div2(spawnZ)
 	offsetX := div2(spawnX)
 
-	for y := 0; y < spawnY; y++ {
+	for z := 0; z < spawnZ; z++ {
 		for x := 0; x < spawnX; x++ {
 			var c chunk
-			cc := chunkCoords{y - offsetY, x - offsetX}
-			w.chunks[cc] = c.buildChunk(y-offsetY, x-offsetX)
+			cc := chunkCoords{z - offsetZ, x - offsetX}
+			w.chunks[cc] = c.buildChunk(z-offsetZ, x-offsetX)
 		}
 	}
 }
 
 // TODO make w.chunks[cc] getter which will init chunk if not in map
 func (w *world) los(cc chunkCoords) [][]*chunk {
-	py := cc[0]
+	pz := cc[0]
 	px := cc[1]
 
-	offsetY := div2(losY)
+	offsetZ := div2(losZ)
 	offsetX := div2(losX)
 
-	straight := make([]*chunk, losY*losX)
-	grid := make([][]*chunk, losY)
-	for y := range grid {
-		grid[y] = straight[y*losX : (y+1)*losX]
-		for x := range grid[y] {
-			cc := chunkCoords{y + py - offsetY, x + px - offsetX}
-			grid[y][x] = w.chunks[cc]
+	straight := make([]*chunk, losZ*losX)
+	grid := make([][]*chunk, losZ)
+	for z := range grid {
+		grid[z] = straight[z*losX : (z+1)*losX]
+		for x := range grid[z] {
+			cc := chunkCoords{z + pz - offsetZ, x + px - offsetX}
+			grid[z][x] = w.chunks[cc]
 		}
 	}
 	return grid

@@ -1,9 +1,9 @@
-var buildMove = function (y, x) {
+var buildMove = function (z, x) {
   return {
     id: config.ID,
     event: "game:move",
     data: {
-      y: y,
+      z: z,
       x: x
     },
   };
