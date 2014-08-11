@@ -50,24 +50,7 @@ func pump() {
 	}
 }
 
-func init() {
-	entitiesSet = make([]string, 200000)
-	positionsSet = make(positionsMap)
-	materialsSet = make(materialsMap)
-	controlledSet = make(controlledMap)
-	brainSet = make(brainMap)
-}
-
-func (g *Game) Init() {
-	log.Printf("Starting server with seed: %s", seed)
-	rand.Seed(seed)
-	trashRand = rand.New(rand.NewSource(rand.Int63()))
-	w.init()
-	reg = newRegistry()
-
-	controllableSystem.init()
-	brainableSystem.init()
-
+func (g *Game) populate() {
 	id := newUUID()
 	positionsSet.add(id, 0, 0, 0, 0)
 	materialsSet.add(id, cow)
@@ -97,7 +80,26 @@ func (g *Game) Init() {
 	positionsSet.add(id, 0, 0, 1, 0)
 	materialsSet.add(id, stone)
 	brainSet.add(id, rock)
+}
 
-	// TODO init systems
+func init() {
+	entitiesSet = make([]string, 200000)
+	positionsSet = make(positionsMap)
+	materialsSet = make(materialsMap)
+	controlledSet = make(controlledMap)
+	brainSet = make(brainMap)
+}
+
+func (g *Game) Init() {
+	log.Printf("Starting server with seed: %s", seed)
+	rand.Seed(seed)
+	trashRand = rand.New(rand.NewSource(rand.Int63()))
+	w.init()
+	g.populate()
+	reg = newRegistry()
+
+	controllableSystem.init()
+	brainableSystem.init()
+
 	go pump()
 }

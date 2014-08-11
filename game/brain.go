@@ -36,6 +36,5 @@ func randomBrain(delay int) func(*position) {
 }
 
 func rockBrain() func(*position) {
-	return func(pos *position) {
-	}
+	return func(pos *position) {}
 }

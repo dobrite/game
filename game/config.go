@@ -6,10 +6,10 @@ import (
 
 const (
 	seed           = 0xDEADBEEF
-	chunkX         = 16
 	chunkY         = 16
-	worldX         = math.MaxUint32 // 4294967295
+	chunkX         = 16
 	worldY         = math.MaxUint32 // 4294967295
+	worldX         = math.MaxUint32 // 4294967295
 	spawnY         = 11
 	spawnX         = 11
 	losY           = 3

@@ -17,6 +17,7 @@ func (b *brainable) run() {
 	for k, v := range brainSet {
 		p := positionsSet.byEnt(k)
 		b.strategyFunctions[v.strategy](p)
+		// TODO batch this then send when done
 		reg.publish(buildMessageItem(k))
 	}
 }

@@ -43,6 +43,7 @@ func newWebsocketTransport(ws *websocket.Conn) transport {
 	}
 	t.ws.SetReadLimit(maxMessageSize)
 	t.ws.SetReadDeadline(time.Now().Add(pongWait))
+	// TODO look at this again
 	var zero time.Time
 	t.ws.SetReadDeadline(zero)
 	t.ws.SetPongHandler(t.pongHandler)
