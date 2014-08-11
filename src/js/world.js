@@ -69,8 +69,8 @@ var renderItem = function (id, y, x, cy, cx, materialType) {
   var cubeY = y * config.TILE_WIDTH;
   var cubeX = x * config.TILE_HEIGHT;
 
-  y = cubeY + config.TILE_HEIGHT/4 + offsetY;
-  x = cubeX + config.TILE_WIDTH/4 + offsetX;
+  var sceneY = cubeY + offsetY + config.TILE_HEIGHT / 4;
+  var sceneX = cubeX + offsetX + config.TILE_WIDTH / 4;
 
   var item = items[id];
 
@@ -81,9 +81,9 @@ var renderItem = function (id, y, x, cy, cx, materialType) {
     scene.add(item);
   }
 
-  item.position.x = x + config.TILE_WIDTH / 2;
+  item.position.x = sceneX + config.TILE_WIDTH / 2;
   item.position.y = config.TILE_HEIGHT;
-  item.position.z = y + config.TILE_DEPTH / 2;
+  item.position.z = sceneY + config.TILE_DEPTH / 2;
 };
 
 module.exports = {
