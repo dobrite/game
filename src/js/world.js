@@ -24,7 +24,7 @@ var initTiles = function (y, x) {
   return tiles;
 };
 
-var render = function (chunks) {
+var renderAll = function (chunks) {
   for (var y = 0; y < config.LOS_Y; y++) {
     for (var x = 0; x < config.LOS_X; x++) {
       renderChunk(y, x, chunks[y][x]);
@@ -88,6 +88,6 @@ var renderItem = function (id, y, x, cy, cx, materialType) {
 
 module.exports = {
   initLos: initLos,
-  render: render,
+  renderAll: renderAll,
   renderItem: renderItem,
 };
