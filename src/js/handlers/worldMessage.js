@@ -1,7 +1,7 @@
 var world = require('../world');
 
 var worldMessage = function (message) {
-  world.render(message.data);
+  world.renderAll(message.data);
 };
 
 module.exports = worldMessage;
