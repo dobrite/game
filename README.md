@@ -1,4 +1,10 @@
-install go
+```
+git clone https://github.com/dobrite/game
+npm install
+gulp
+```
+
+[install go](http://golang.org/doc/install)
 
 ```
 go get github.com/gorilla/websocket
