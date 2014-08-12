@@ -14,6 +14,6 @@ go get github.com/deckarep/golang-set
 go run main.go
 ```
 
-point your browser to localhost:3000
+point your browser to [localhost:3000](http://localhost:3000)
 
-![game](http://i.imgur.com/lUDZhVe.png "game")
+![game](http://i.imgur.com/2ZNUEFO.png "game")
