@@ -45,6 +45,9 @@ var renderChunk = function (z, x, chunk) {
       var cubeZ = i * config.TILE_HEIGHT;
       var cubeX = j * config.TILE_WIDTH;
 
+      var sceneZ = cubeZ + offsetZ;
+      var sceneX = cubeX + offsetX;
+
       var cube = los[z][x][i][j];
 
       if (cube === undefined) {
@@ -55,8 +58,8 @@ var renderChunk = function (z, x, chunk) {
         scene.add(cube);
       }
 
-      cube.position.x = cubeX + offsetX + config.TILE_WIDTH / 2;
-      cube.position.z = cubeZ + offsetZ + config.TILE_DEPTH / 2;
+      cube.position.z = sceneZ + config.TILE_DEPTH / 2;
+      cube.position.x = sceneX + config.TILE_WIDTH / 2;
     }
   }
 };
@@ -81,9 +84,9 @@ var renderItem = function (id, z, x, cz, cx, materialType) {
     scene.add(item);
   }
 
+  item.position.z = sceneZ + config.TILE_DEPTH / 2;
   item.position.x = sceneX + config.TILE_WIDTH / 2;
   item.position.y = config.TILE_HEIGHT;
-  item.position.z = sceneZ + config.TILE_DEPTH / 2;
 };
 
 module.exports = {
