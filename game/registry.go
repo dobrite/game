@@ -36,7 +36,21 @@ func (r *registry) run() error {
 	}
 }
 
-func (r *registry) publish(payload string) {
+// all but initiator
+func (r *registry) publish(session *session, payload string) {
+	r.command <- func() {
+		s := r.sessionIds.Iter()
+		for sId := range s {
+			if sId != session.id {
+				// whole server can be blocked by a slow client
+				r.sessions[sId.(string)].toConn <- payload
+			}
+		}
+	}
+}
+
+// broadcast - everyone
+func (r *registry) broadcast(payload string) {
 	r.command <- func() {
 		s := r.sessionIds.Iter()
 		for sId := range s {

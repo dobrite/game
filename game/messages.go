@@ -22,22 +22,44 @@ type messageMove struct {
 	X int `json:"x"`
 }
 
-func buildMessageConfig(id string) string {
+func buildMessageConfig() string {
 	wc := &wireConfig{
 		Event:  "game:config",
 		ChunkZ: chunkZ,
 		ChunkX: chunkX,
 		LosZ:   losZ,
 		LosX:   losX,
-		Id:     id,
 	}
-
 	c, _ := json.Marshal(wc)
 	return string(c)
 }
 
 func buildMessageWorld(cc chunkCoords) string {
 	msg, _ := json.Marshal(w.toJSON(cc))
+	return string(msg)
+}
+
+type messageSpawn struct {
+	Event  string `json:"event"`
+	Id     string `json:"id"`
+	Z      int    `json:"z"`
+	X      int    `json:"x"`
+	ChunkZ int    `json:"cz"`
+	ChunkX int    `json:"cx"`
+}
+
+func buildMessageSpawn(ent string) string {
+	id := ent
+	position := positionsSet.byEnt(ent)
+	ms := &messageSpawn{
+		Event:  "game:spawn",
+		Id:     id,
+		Z:      position.z,
+		X:      position.x,
+		ChunkZ: position.cz,
+		ChunkX: position.cx,
+	}
+	msg, _ := json.Marshal(ms)
 	return string(msg)
 }
 

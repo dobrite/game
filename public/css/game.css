@@ -1,0 +1,11 @@
+#stats {
+  position: absolute;
+  top: 10px;
+}
+
+#coords {
+  position: absolute;
+  top: 65px;
+  left: 15px;
+  color: white;
+}

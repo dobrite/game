@@ -18,6 +18,6 @@ func (b *brainable) run() {
 		p := positionsSet.byEnt(k)
 		b.strategyFunctions[v.strategy](p)
 		// TODO batch this then send when done
-		reg.publish(buildMessageItem(k))
+		reg.broadcast(buildMessageItem(k))
 	}
 }

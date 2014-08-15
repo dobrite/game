@@ -1,27 +1,30 @@
 var connection = require('./connection'),
     messages = require('./messages');
+    throttle = require('lodash.throttle');
 
-function moveAvatar(z, x) {
+var moveAvatar = function (z, x) {
   connection.send(JSON.stringify(messages.buildMove(z, x)));
-}
+};
 
-function moveUp() {
+var moveUp = function () {
   moveAvatar(-1, 0);
-}
-function moveDown() {
-  moveAvatar(1, 0);
-}
-function moveLeft() {
-  moveAvatar(0, -1);
-}
-function moveRight() {
-  moveAvatar(0, 1);
-}
+};
 
-// game loop optimized keyboard handling
-kd.UP.down(moveUp);
-kd.DOWN.down(moveDown);
-kd.LEFT.down(moveLeft);
-kd.RIGHT.down(moveRight);
+var moveDown = function () {
+  moveAvatar(1, 0);
+};
+
+var moveLeft = function () {
+  moveAvatar(0, -1);
+};
+
+var moveRight = function () {
+  moveAvatar(0, 1);
+};
+
+kd.UP.down(throttle(moveUp, 50));
+kd.DOWN.down(throttle(moveDown, 50));
+kd.LEFT.down(throttle(moveLeft, 50));
+kd.RIGHT.down(throttle(moveRight, 50));
 
 module.exports = kd;

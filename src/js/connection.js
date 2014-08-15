@@ -10,7 +10,6 @@ connection.onerror = function (error) {
   console.log('WebSocket Error ' + error);
 };
 
-// Log messages from the server
 connection.onmessage = function (e) {
   var message = JSON.parse(e.data);
   messageToHandler[message.event](message);

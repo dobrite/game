@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "game",
   "main": "src/js/game.js",
+  "dependencies": {
+    "lodash.throttle": "~2.4.1"
+  },
   "devDependencies": {
     "gulp": "~3.7.0",
     "gulp-notify": "~1.2.4",

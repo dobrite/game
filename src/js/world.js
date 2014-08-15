@@ -27,6 +27,9 @@ var initTiles = function (z, x) {
 var renderAll = function (chunks) {
   for (var z = 0; z < config.LOS_Z; z++) {
     for (var x = 0; x < config.LOS_X; x++) {
+      //var chunk = chunks[z][x];
+      //var wcZ = chunk.coords[0];
+      //var wcX = chunk.coords[1];
       renderChunk(z, x, chunks[z][x]);
     }
   }
@@ -36,7 +39,7 @@ var offset = function (z, x) {
 };
 
 var renderChunk = function (z, x, chunk) {
-  //y, x are los, i.e. los 3,3 [[0,0],[0,1]...[2,2]]
+  //z, x are los, i.e. los 3,3 [[0,0],[0,1]...[2,2]]
   var offsetZ = (z - Math.floor(config.LOS_Z / 2)) * config.CHUNK_Z * config.TILE_HEIGHT;
   var offsetX = (x - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
 

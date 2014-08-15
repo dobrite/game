@@ -41,7 +41,7 @@ func (h *Handler) handle(transport transport) {
 	toConn := make(chan string)
 
 	id := newUUID()
-	initialCoords := chunkCoords{-2, -2}
+	initialCoords := chunkCoords{0, 0}
 	positionsSet.add(id, 0, 0, initialCoords[0], initialCoords[1])
 	materialsSet.add(id, flesh)
 	controlledSet.add(id)
@@ -49,9 +49,10 @@ func (h *Handler) handle(transport transport) {
 	session := newSession(id, transport, toConn, toGame)
 
 	reg.add(session)
-	reg.send(session, buildMessageConfig(id))
+	reg.send(session, buildMessageConfig())
 	reg.send(session, buildMessageWorld(initialCoords))
-	reg.publish(buildMessageItem(id))
+	reg.send(session, buildMessageSpawn(id))
+	reg.publish(session, buildMessageItem(id))
 
 	log.Printf("client connected: %s", id)
 
@@ -80,6 +81,7 @@ func (h *Handler) handleMessage(msg message) {
 	id := msg.id
 	switch msg := msg.message.(type) {
 	case messageMove:
+		log.Println("aaa")
 		controllableSystem.enqueue(id, msg)
 	default:
 		log.Fatal("I give up")

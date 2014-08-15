@@ -2,6 +2,7 @@ package game
 
 import (
 	"encoding/json"
+	"log"
 )
 
 var w world
@@ -43,7 +44,7 @@ func (w *world) buildSpawn(spawnZ, spawnX int) {
 func (w *world) los(cc chunkCoords) [][]*chunk {
 	pz := cc[0]
 	px := cc[1]
-
+	log.Println(pz, px)
 	offsetZ := div2(losZ)
 	offsetX := div2(losX)
 
@@ -52,6 +53,7 @@ func (w *world) los(cc chunkCoords) [][]*chunk {
 	for z := range grid {
 		grid[z] = straight[z*losX : (z+1)*losX]
 		for x := range grid[z] {
+			log.Println(z+pz-offsetZ, x+px-offsetX)
 			cc := chunkCoords{z + pz - offsetZ, x + px - offsetX}
 			grid[z][x] = w.chunks[cc]
 		}

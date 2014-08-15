@@ -1,5 +1,4 @@
 var initConfig = function (data) {
-  window.config.ID = data.id;
   window.config.LOS_Z = data.losZ; // how many chunks around player to render
   window.config.LOS_X = data.losX; // how many chunks around player to render
   window.config.CHUNK_Z = data.chunkZ; // tiles per chunk
