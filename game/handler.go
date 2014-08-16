@@ -81,7 +81,6 @@ func (h *Handler) handleMessage(msg message) {
 	id := msg.id
 	switch msg := msg.message.(type) {
 	case messageMove:
-		log.Println("aaa")
 		controllableSystem.enqueue(id, msg)
 	default:
 		log.Fatal("I give up")
