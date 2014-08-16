@@ -12,7 +12,7 @@ type chunk struct {
 
 type chunkCoords coords
 
-type wireChunk struct {
+type messageChunk struct {
 	Coords    chunkCoords                  `json:"coords"`
 	Materials [chunkZ][chunkX]materialType `json:"m"`
 }
@@ -38,13 +38,13 @@ func (c *chunk) toArray() [chunkZ][chunkX]materialType {
 	return arr
 }
 
-func (c *chunk) toWire() *wireChunk {
-	return &wireChunk{
+func (c *chunk) toJSON() *messageChunk {
+	return &messageChunk{
 		Coords:    c.c,
 		Materials: c.toArray(),
 	}
 }
 
 func (c *chunk) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.toWire())
+	return json.Marshal(c.toJSON())
 }

@@ -5,23 +5,14 @@ var los;
 var items = {};
 
 var initLos = function (data) {
-  los = new Array(config.LOS_Z);
-  for (var i = 0; i < config.LOS_Z; i ++) {
-    los[i] = new Array(config.LOS_X);
-  }
-  for (var j = 0; j < config.LOS_Z; j ++) {
-    for (var k = 0; k < config.LOS_X; k++) {
-      los[j][k] = initTiles(config.CHUNK_Z, config.CHUNK_X);
+  console.log(config.LOS_Z * config.CHUNK_Z);
+  los = new Array(config.LOS_Z * config.CHUNK_Z);
+  for (var z = 0; z < config.LOS_Z * config.CHUNK_Z; z ++) {
+    los[z] = new Array(config.LOS_X * config.CHUNK_X);
+    for (var y = 0; y < config.LOS_Y * config.CHUNK_Y; y ++) {
+      los[z][y] = new Array(config.LOS_Y * config.CHUNK_Y);
     }
   }
-};
-
-var initTiles = function (z, x) {
-  var tiles = new Array(z);
-  for (var i = 0; i < z; i++) {
-    tiles[i] = new Array(x);
-  }
-  return tiles;
 };
 
 var renderAll = function (chunks) {
@@ -35,7 +26,7 @@ var renderAll = function (chunks) {
   }
 };
 
-var offset = function (z, x) {
+var render = function () {
 };
 
 var renderChunk = function (z, x, chunk) {

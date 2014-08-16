@@ -53,7 +53,6 @@ func (w *world) los(cc chunkCoords) [][]*chunk {
 	for z := range grid {
 		grid[z] = straight[z*losX : (z+1)*losX]
 		for x := range grid[z] {
-			log.Println(z+pz-offsetZ, x+px-offsetX)
 			cc := chunkCoords{z + pz - offsetZ, x + px - offsetX}
 			grid[z][x] = w.chunks[cc]
 		}

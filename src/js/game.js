@@ -21,7 +21,7 @@ scene.add(axis);
 //scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 //renderer.setClearColor(scene.fog.color, 1);
 
-var gridHelper = new THREE.GridHelper(1024, 32);
+var gridHelper = new THREE.GridHelper(1640, 32);
 scene.add(gridHelper);
 
 //var ch = new THREE.CameraHelper(camera);

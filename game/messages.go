@@ -22,13 +22,26 @@ type messageMove struct {
 	X int `json:"x"`
 }
 
+type messageConfig struct {
+	Event  string `json:"event"`
+	ChunkZ int    `json:"chunkZ"`
+	ChunkX int    `json:"chunkX"`
+	ChunkY int    `json:"chunkY"`
+	LosZ   int    `json:"losZ"`
+	LosX   int    `json:"losX"`
+	LosY   int    `json:"losY"`
+	Id     string `json:"id"`
+}
+
 func buildMessageConfig() string {
-	wc := &wireConfig{
+	wc := &messageConfig{
 		Event:  "game:config",
 		ChunkZ: chunkZ,
 		ChunkX: chunkX,
+		ChunkY: chunkY,
 		LosZ:   losZ,
 		LosX:   losX,
+		LosY:   losY,
 	}
 	c, _ := json.Marshal(wc)
 	return string(c)
