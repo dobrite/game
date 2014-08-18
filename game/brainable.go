@@ -1,5 +1,7 @@
 package game
 
+//brainMap map[id]*brain
+
 var brainableSystem brainable
 
 type brainable struct {
@@ -14,10 +16,11 @@ func (b *brainable) init() {
 }
 
 func (b *brainable) run() {
-	for k, v := range brainSet {
-		p := positionsSet.byEnt(k)
-		b.strategyFunctions[v.strategy](p)
+	for _, v := range d.allBrains() {
+		// TODO join brain to position to get these directly
+		p := d.getPosition(v.ID)
+		b.strategyFunctions[v.Strategy](p)
 		// TODO batch this then send when done
-		reg.broadcast(buildMessageItem(k))
+		reg.broadcast(buildMessageItem(v.ID))
 	}
 }

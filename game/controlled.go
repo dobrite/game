@@ -1,17 +1,23 @@
 package game
 
+import (
+	"log"
+)
+
 type controlledMap map[string]controlled
 
 type controlled struct {
-	controller string
+	ID string
 }
 
-func (c controlledMap) add(ent string) {
-	c[ent] = controlled{
-		controller: ent,
+func (db *db) addControlled(id string) {
+	c := &controlled{
+		ID: id,
 	}
-}
 
-func (c controlledMap) remove(ent string) {
-	delete(c, ent)
+	if err := db.dbmap.Insert(c); err != nil {
+		panic(err)
+	}
+
+	log.Println(c)
 }

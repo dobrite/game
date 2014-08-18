@@ -40,11 +40,11 @@ func (h *Handler) handle(transport transport) {
 	toGame := make(chan string)
 	toConn := make(chan string)
 
-	id := newUUID()
-	initialCoords := chunkCoords{0, 0}
-	positionsSet.add(id, 0, 0, initialCoords[0], initialCoords[1])
-	materialsSet.add(id, flesh)
-	controlledSet.add(id)
+	id := d.newUUID()
+	initialCoords := chunkCoords{0, 0, defaultDepth / chunkY}
+	d.addPosition(id, 0, 0, 0, initialCoords[0], initialCoords[1], initialCoords[2])
+	d.addMaterial(id, flesh)
+	d.addControlled(id)
 
 	session := newSession(id, transport, toConn, toGame)
 
@@ -90,8 +90,6 @@ func (h *Handler) handleMessage(msg message) {
 func (h *Handler) teardown(session *session) {
 	log.Printf("client disconnected: %s", session.id)
 	reg.remove(session)
-	positionsSet.remove(session.id)
-	materialsSet.remove(session.id)
-	controlledSet.remove(session.id)
+	d.remove(session.id)
 	// TODO broadcast exit message to world - update js client to remove
 }

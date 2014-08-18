@@ -3,7 +3,7 @@ package game
 type item struct {
 	id       string
 	position *position
-	material material
+	material *material
 }
 
 type itemJSON struct {
@@ -18,6 +18,6 @@ func (i *item) toJSON() *itemJSON {
 		Event:        "game:item",
 		Id:           i.id,
 		WorldCoords:  i.position.toWorldCoords(),
-		MaterialType: i.material.materialType,
+		MaterialType: i.material.MaterialType,
 	}
 }

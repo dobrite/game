@@ -1,0 +1,50 @@
+package game
+
+import (
+	"github.com/jmoiron/modl"
+	//"github.com/nu7hatch/gouuid"
+	//"database/sql"
+	"log"
+	"os"
+)
+
+type db struct {
+	dbmap *modl.DbMap
+}
+
+type ent string
+
+type entity struct {
+	ID ent `db:"id"`
+}
+
+func (e *entity) Scan(src interface{}) error {
+	asBytes, ok := src.([]byte)
+	log.Println(asBytes)
+	if !ok {
+		log.Println("b")
+	}
+
+	asString := string(asBytes)
+	log.Println(asString)
+	*e = entity{ID: ent(asString)}
+	return nil
+}
+
+func (db *db) init(dbmap *modl.DbMap) {
+	db.dbmap = dbmap
+	tm := db.dbmap.AddTableWithName(entity{}, "entities").SetKeys(true, "id")
+	db.dbmap.Dialect.AutoIncrInsertSuffix(tm.ColMap("id"))
+
+	db.dbmap.AddTableWithName(position{}, "positions")
+	e := &entity{}
+	dbmap.TraceOn("", log.New(os.Stdout, "MODL: ", log.Ldate|log.Ltime|log.Lshortfile))
+	if err := db.dbmap.Insert(e); err != nil {
+		panic(err)
+	}
+	dbmap.TraceOff()
+	p := &position{0, 0, 0, 0, 0, 1}
+	if err := db.dbmap.Insert(p); err != nil {
+		panic(err)
+	}
+}

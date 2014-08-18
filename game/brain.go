@@ -1,11 +1,14 @@
 package game
 
-type brainMap map[string]*brain
+import (
+	"log"
+)
 
 type strategy int
 
 type brain struct {
-	strategy strategy
+	ID       string
+	Strategy strategy
 }
 
 const (
@@ -13,18 +16,27 @@ const (
 	random
 )
 
-func (b brainMap) add(ent string, strat strategy) {
-	b[ent] = &brain{
-		strategy: strat,
+func (db *db) addBrain(id string, strat strategy) {
+	b := &brain{
+		ID:       id,
+		Strategy: strat,
 	}
+
+	if err := db.dbmap.Insert(b); err != nil {
+		panic(err)
+	}
+
+	log.Println(b)
 }
 
-func (b brainMap) remove(ent string) {
-	delete(b, ent)
-}
+func (db *db) allBrains() []brain {
+	var brains []brain
 
-func (b brainMap) byEnt(ent string) *brain {
-	return b[ent]
+	if _, err := d.dbmap.Select(&brains, "select * from brains;"); err != nil {
+		panic(err)
+	}
+
+	return brains
 }
 
 func randomBrain(delay int) func(*position) {

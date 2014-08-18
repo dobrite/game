@@ -5,7 +5,7 @@ import (
 )
 
 type chunk struct {
-	a [chunkZ][chunkX][]string
+	a [chunkZ][chunkX][chunkY]string // entity
 	c chunkCoords
 	json.Marshaler
 }
@@ -13,26 +13,31 @@ type chunk struct {
 type chunkCoords coords
 
 type messageChunk struct {
-	Coords    chunkCoords                  `json:"coords"`
-	Materials [chunkZ][chunkX]materialType `json:"m"`
+	Coords    chunkCoords                          `json:"coords"`
+	Materials [chunkZ][chunkX][chunkY]materialType `json:"m"`
 }
 
-func (c *chunk) buildChunk(cz int, cx int) *chunk {
+func (c *chunk) buildChunk(cz int, cx int, cy int) *chunk {
 	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
-			c.a[z][x] = make([]string, maxEntPerCoord)
-			c.a[z][x][0] = makeTile(z, x, cz, cx, materialType(d(2)+2))
+
+			// "tile"
+			id := d.newUUID()
+			d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
+			d.addMaterial(id, materialType(die(2)+2))
+
+			c.a[z][x][0] = id
 		}
 	}
-	c.c = chunkCoords{cz, cx}
+	c.c = chunkCoords{cz, cx, defaultDepth / chunkY}
 	return c
 }
 
-func (c *chunk) toArray() [chunkZ][chunkX]materialType {
-	var arr [chunkZ][chunkX]materialType
+func (c *chunk) toArray() [chunkZ][chunkX][chunkY]materialType {
+	var arr [chunkZ][chunkX][chunkY]materialType
 	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
-			arr[z][x] = materialsSet[c.a[z][x][0]].materialType
+			arr[z][x][0] = d.getMaterial(c.a[z][x][0]).MaterialType
 		}
 	}
 	return arr

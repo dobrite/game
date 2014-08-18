@@ -11,10 +11,10 @@ func (c *controllable) init() {
 	c.queue = make(map[string]func())
 }
 
-func (c *controllable) enqueue(ent string, msg messageMove) {
-	c.queue[ent] = func() {
-		positionsSet[ent].move(msg.Z, msg.X)
-		reg.broadcast(buildMessageItem(ent))
+func (c *controllable) enqueue(id string, msg messageMove) {
+	c.queue[id] = func() {
+		d.getPosition(id).move(msg.Z, msg.X)
+		reg.broadcast(buildMessageItem(id))
 	}
 }
 

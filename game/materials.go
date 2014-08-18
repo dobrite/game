@@ -1,9 +1,14 @@
 package game
 
+import (
+	"log"
+)
+
 type materialsMap map[string]material
 
 type material struct {
-	materialType
+	ID           string
+	MaterialType materialType `db:"material_type"`
 }
 
 type materialType int
@@ -20,26 +25,20 @@ const (
 	pig
 )
 
-func (m materialsMap) add(ent string, t materialType) {
-	m[ent] = material{
-		materialType: t,
+func (db *db) addMaterial(id string, t materialType) {
+	m := &material{
+		ID:           id,
+		MaterialType: t,
 	}
-}
 
-func (m materialsMap) remove(ent string) {
-	delete(m, ent)
-}
-
-func (m materialsMap) byType(t materialType) []string {
-	var ret []string
-	for k, v := range materialsSet {
-		if v.materialType == t {
-			ret = append(ret, k)
-		}
+	if err := db.dbmap.Insert(m); err != nil {
+		panic(err)
 	}
-	return ret
+
+	log.Println(m)
 }
 
-func (m materialsMap) byEnt(ent string) material {
-	return m[ent]
+func (db *db) getMaterial(id string) *material {
+	obj, _ := db.dbmap.Get(material{}, id)
+	return obj.(*material)
 }

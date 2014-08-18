@@ -9,12 +9,12 @@ const (
 	chunkZ         = 16
 	chunkX         = 16
 	chunkY         = 16
-	worldZ         = math.MaxUint32 // 4294967295
-	worldX         = math.MaxUint32 // 4294967295
+	worldZ         = math.MaxInt32 // 2147483647
+	worldX         = math.MaxInt32 // 2147483647
 	worldY         = 256
-	spawnZ         = 11
-	spawnX         = 11
-	spawnY         = 11 // TODO decide on height
+	spawnZ         = 3
+	spawnX         = 3
+	spawnY         = 3 // TODO decide on height
 	losZ           = 3
 	losX           = 3
 	losY           = 3

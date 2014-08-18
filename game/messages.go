@@ -61,26 +61,25 @@ type messageSpawn struct {
 	ChunkX int    `json:"cx"`
 }
 
-func buildMessageSpawn(ent string) string {
-	id := ent
-	position := positionsSet.byEnt(ent)
+func buildMessageSpawn(id string) string {
+	position := d.getPosition(id)
 	ms := &messageSpawn{
 		Event:  "game:spawn",
 		Id:     id,
-		Z:      position.z,
-		X:      position.x,
-		ChunkZ: position.cz,
-		ChunkX: position.cx,
+		Z:      position.Z,
+		X:      position.X,
+		ChunkZ: position.Cz,
+		ChunkX: position.Cx,
 	}
 	msg, _ := json.Marshal(ms)
 	return string(msg)
 }
 
-func buildMessageItem(ent string) string {
+func buildMessageItem(id string) string {
 	i := &item{
-		id:       ent,
-		position: positionsSet.byEnt(ent),
-		material: materialsSet.byEnt(ent),
+		id:       id,
+		position: d.getPosition(id),
+		material: d.getMaterial(id),
 	}
 	msg, _ := json.Marshal(i.toJSON())
 	return string(msg)

@@ -1,3 +1,5 @@
+### game development
+
 install postgres 9.3 and contrib
 
 ```
@@ -39,3 +41,7 @@ go run main.go
 point your browser to [localhost:3000](http://localhost:3000)
 
 ![game](http://i.imgur.com/2ZNUEFO.png "game")
+
+### production
+
+all things in due time...
