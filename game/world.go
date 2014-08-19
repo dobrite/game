@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 )
 
-var w world
-
 type world struct {
 	chunks map[chunkCoords]*chunk
 	json.Marshaler
@@ -32,9 +30,7 @@ func (w *world) buildSpawn(spawnZ, spawnX int) {
 
 	for z := 0; z < spawnZ; z++ {
 		for x := 0; x < spawnX; x++ {
-			var c chunk
-			cc := chunkCoords{z - offsetZ, x - offsetX, defaultDepth / chunkY}
-			w.chunks[cc] = c.buildChunk(z-offsetZ, x-offsetX, defaultDepth/chunkY)
+			makeChunk(z-offsetZ, x-offsetX, defaultDepth/chunkY)
 		}
 	}
 }

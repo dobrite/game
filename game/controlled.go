@@ -16,7 +16,7 @@ func (db *db) addControlled(id string) {
 	}
 
 	if err := db.dbmap.Insert(c); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	log.Println(c)

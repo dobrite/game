@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/coopernurse/gorp"
-	"github.com/nu7hatch/gouuid"
 	"log"
 	"os"
 )
@@ -35,35 +34,19 @@ func (db *db) traceOff() {
 //	return nil
 //}
 
-//func (db *db) newUUID() string {
-//	e := &entity{}
-//	if err := d.dbmap.Insert(e); err != nil {
-//		panic(err)
-//	}
-//
-//	return e.ID
-//}
-
 func (db *db) newUUID() string {
-	u4, err := uuid.NewV4()
-	if err != nil {
-		panic("uuid failed")
-	}
-
-	e := &entity{ID: u4.String()}
+	e := &entity{}
 	if err := d.dbmap.Insert(e); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	return u4.String()
+	return e.ID
 }
 
 func (db *db) init() {
-	db.dbmap.AddTableWithName(entity{}, "entities")
-	//db.dbmap.Dialect.AutoIncrInsertSuffix(&gorp.ColumnMap{ColumnName: "id"})
-
-	db.dbmap.AddTableWithName(position{}, "positions")
-	db.dbmap.AddTableWithName(material{}, "materials")
-	db.dbmap.AddTableWithName(brain{}, "brains")
-	db.dbmap.AddTableWithName(controlled{}, "controlled")
+	db.dbmap.AddTableWithName(entity{}, "entities").SetKeys(true, "ID")
+	db.dbmap.AddTableWithName(position{}, "positions").SetKeys(false, "ID")
+	db.dbmap.AddTableWithName(material{}, "materials").SetKeys(false, "ID")
+	db.dbmap.AddTableWithName(brain{}, "brains").SetKeys(false, "ID")
+	db.dbmap.AddTableWithName(controlled{}, "controlled").SetKeys(false, "ID")
 }

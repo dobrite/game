@@ -23,14 +23,15 @@ func (db *db) addPosition(id string, z, x, y, cz, cx, cy int) {
 	}
 
 	if err := db.dbmap.Insert(p); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	log.Println(p)
 }
 
 func (db *db) getPosition(id string) *position {
-	obj, _ := db.dbmap.Get(position{}, id)
+	obj, err := d.dbmap.Get(position{}, id)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return obj.(*position)
 }
 

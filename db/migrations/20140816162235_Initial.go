@@ -17,8 +17,8 @@ func Up_20140816162235(txn *sql.Tx) {
 	  z integer NOT NULL,
 	  x integer NOT NULL,
 	  y integer NOT NULL,
-	  cx integer NOT NULL,
 	  cz integer NOT NULL,
+	  cx integer NOT NULL,
 	  cy integer NOT NULL
 	);`)
 

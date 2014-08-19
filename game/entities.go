@@ -1,9 +1,9 @@
 package game
 
 type entity struct {
-	ID string `db:"id"`
+	ID string
 }
 
 func (db *db) remove(id string) {
-	db.dbmap.Delete(&entity{ID: id})
+	d.dbmap.Delete(&entity{ID: id})
 }

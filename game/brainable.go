@@ -1,7 +1,5 @@
 package game
 
-//brainMap map[id]*brain
-
 var brainableSystem brainable
 
 type brainable struct {

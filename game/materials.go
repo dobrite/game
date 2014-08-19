@@ -32,13 +32,14 @@ func (db *db) addMaterial(id string, t materialType) {
 	}
 
 	if err := db.dbmap.Insert(m); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	log.Println(m)
 }
 
 func (db *db) getMaterial(id string) *material {
-	obj, _ := db.dbmap.Get(material{}, id)
+	obj, err := d.dbmap.Get(material{}, id)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return obj.(*material)
 }

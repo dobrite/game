@@ -23,17 +23,15 @@ func (db *db) addBrain(id string, strat strategy) {
 	}
 
 	if err := db.dbmap.Insert(b); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-
-	log.Println(b)
 }
 
 func (db *db) allBrains() []brain {
 	var brains []brain
 
-	if _, err := d.dbmap.Select(&brains, "select * from brains;"); err != nil {
-		panic(err)
+	if _, err := d.dbmap.Select(&brains, "select id, strategy from brains;"); err != nil {
+		log.Fatal(err)
 	}
 
 	return brains
