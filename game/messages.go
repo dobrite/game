@@ -57,8 +57,10 @@ type messageSpawn struct {
 	Id     string `json:"id"`
 	Z      int    `json:"z"`
 	X      int    `json:"x"`
+	Y      int    `json:"y"`
 	ChunkZ int    `json:"cz"`
 	ChunkX int    `json:"cx"`
+	ChunkY int    `json:"cy"`
 }
 
 func buildMessageSpawn(id string) string {
@@ -68,8 +70,10 @@ func buildMessageSpawn(id string) string {
 		Id:     id,
 		Z:      position.Z,
 		X:      position.X,
+		Y:      position.Y,
 		ChunkZ: position.Cz,
 		ChunkX: position.Cx,
+		ChunkY: position.Cy,
 	}
 	msg, _ := json.Marshal(ms)
 	return string(msg)
