@@ -2,6 +2,7 @@ package game
 
 import (
 	"encoding/json"
+	"log"
 )
 
 type chunk struct {
@@ -39,6 +40,7 @@ func (c *chunk) MarshalJSON() ([]byte, error) {
 }
 
 func makeChunk(cz int, cx int, cy int) {
+	log.Printf("Making chunk: %d, %d, %d", cz, cx, cy)
 	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
 			// "tile"

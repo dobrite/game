@@ -70,13 +70,6 @@ func (w *world) los1(cc chunkCoords) [][][]materialType {
 	return grid
 }
 
-//func (w *world) toJSON(cc chunkCoords) *worldJSON {
-//	return &worldJSON{
-//		Event: "game:los",
-//		Data:  w.los(cc),
-//	}
-//}
-
 func (w *world) toJSON(cc chunkCoords) *worldJSON {
 	return &worldJSON{
 		Event: "game:los",
