@@ -1,8 +1,10 @@
 package game
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
+	"strings"
 )
 
 type chunk struct {
@@ -48,5 +50,37 @@ func makeChunk(cz int, cx int, cy int) {
 			d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
 			d.addMaterial(id, materialType(die(2)+2))
 		}
+	}
+}
+
+type sqlStraightChunk struct {
+	Arr string
+	sql.Scanner
+}
+
+func (ssc *sqlStraightChunk) Scan(src interface{}) error {
+	s := string(src.([]uint8))
+	s = strings.Replace(s, "{", "[", -1)
+	s = strings.Replace(s, "}", "]", -1)
+	ssc.Arr = s
+	return nil
+}
+
+func (ssc *sqlStraightChunk) straightChunk() {
+	row := d.dbmap.Db.QueryRow(`SELECT array_agg(material_type)
+	    FROM materials WHERE id IN
+		(SELECT id FROM positions WHERE
+			cx = 1 AND
+			cz = 1 AND
+			cy = 4
+			ORDER BY x,z,y);`)
+	err := row.Scan(&ssc)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("no rows")
+	case err != nil:
+		log.Fatal(err)
+	default:
+		log.Println(ssc.Arr)
 	}
 }

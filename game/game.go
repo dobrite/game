@@ -63,7 +63,9 @@ func (g *Game) populate() {
 }
 
 func (g *Game) Init(dbmap *gorp.DbMap) {
-	d = &db{dbmap: dbmap}
+	d = &db{
+		dbmap: dbmap,
+	}
 	d.init()
 
 	log.Printf("Starting server with seed: %s", seed)
