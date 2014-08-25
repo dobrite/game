@@ -9,7 +9,7 @@ type item struct {
 type itemJSON struct {
 	Event        string       `json:"event"`
 	Id           string       `json:"id"`
-	WorldCoords  *worldCoords `json:"worldCoords"`
+	WorldCoords  *worldCoords `json:"wc"`
 	MaterialType materialType `json:"materialType"`
 }
 

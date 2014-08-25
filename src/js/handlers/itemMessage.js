@@ -6,14 +6,16 @@ var world = require('../world'),
 var z, x, cz, cx;
 
 var itemMessage = function (message) {
-  z = message.worldCoords.coords[0];
-  x = message.worldCoords.coords[1];
-  cz = message.worldCoords.chunkCoords[0];
-  cx = message.worldCoords.chunkCoords[1];
+  z = message.wc.c[0];
+  x = message.wc.c[1];
+  y = message.wc.c[2];
+  cz = message.wc.cc[0];
+  cx = message.wc.cc[1];
+  cy = message.wc.cc[2];
 
   if(player.getId() === message.id) {
-    ui.updateUi(z, x, cz, cx);
-    player.updatePosition(z, x, cz, cx);
+    ui.updateUi(z, x, y, cz, cx, cy);
+    player.updatePosition(z, x, y, cz, cx, cy);
   }
 
   world.renderItem(message.id, z, x, cz, cx, message.materialType);

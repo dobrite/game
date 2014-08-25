@@ -44,22 +44,22 @@ func (g *Game) populate() {
 	id = d.newUUID()
 	d.addPosition(id, 0, 0, 0, 0, 0, defaultDepth/chunkY)
 	d.addMaterial(id, stone)
-	d.addBrain(id, random)
+	d.addBrain(id, rock)
 
 	id = d.newUUID()
 	d.addPosition(id, 0, 0, 0, 1, 1, defaultDepth/chunkY)
 	d.addMaterial(id, stone)
-	d.addBrain(id, random)
+	d.addBrain(id, rock)
 
 	id = d.newUUID()
 	d.addPosition(id, 0, 0, 0, 0, 1, defaultDepth/chunkY)
 	d.addMaterial(id, stone)
-	d.addBrain(id, random)
+	d.addBrain(id, rock)
 
 	id = d.newUUID()
 	d.addPosition(id, 0, 0, 0, 1, 0, defaultDepth/chunkY)
 	d.addMaterial(id, stone)
-	d.addBrain(id, random)
+	d.addBrain(id, rock)
 }
 
 func (g *Game) Init(dbmap *gorp.DbMap) {
@@ -72,6 +72,7 @@ func (g *Game) Init(dbmap *gorp.DbMap) {
 	rand.Seed(seed)
 	trashRand = rand.New(rand.NewSource(rand.Int63()))
 
+	// TODO need a metadata game table so we know when we've genned spawn
 	g.populate()
 	w.init()
 

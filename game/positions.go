@@ -35,6 +35,10 @@ func (db *db) getPosition(id string) *position {
 	return obj.(*position)
 }
 
+func (db *db) setPosition(p *position) {
+	d.dbmap.Insert(p)
+}
+
 func (p *position) toWorldCoords() *worldCoords {
 	return &worldCoords{
 		ChunkCoords: coords{p.Cz, p.Cx},

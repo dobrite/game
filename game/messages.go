@@ -47,8 +47,14 @@ func buildMessageConfig() string {
 	return string(c)
 }
 
-func buildMessageWorld(cc chunkCoords) string {
-	msg, _ := json.Marshal(w.toJSON(cc))
+type messageChunk struct {
+	Event     string           `json:"event"`
+	Coords    chunkCoords      `json:"coords"`
+	Materials [][]materialType `json:"materials"`
+}
+
+func buildMessageChunk(cc chunkCoords) string {
+	msg, _ := json.Marshal(cc.toJSON())
 	return string(msg)
 }
 

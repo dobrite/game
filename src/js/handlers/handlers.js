@@ -1,12 +1,12 @@
 var configMessage = require('./configMessage'),
-    worldMessage = require('./worldMessage'),
+    chunkMessage = require('./chunkMessage'),
     itemMessage = require('./itemMessage'),
     spawnMessage = require('./spawnMessage');
 
 // TODO create a decorator or register on import
 var messageToHandler = {
   "game:config": configMessage,
-  "game:los": worldMessage,
+  "game:chunk": chunkMessage,
   "game:item": itemMessage,
   "game:spawn": spawnMessage,
 };

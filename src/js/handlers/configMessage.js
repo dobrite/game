@@ -3,7 +3,7 @@ var config = require('../config');
 
 var configMessage = function (message) {
   config.initConfig(message);
-  world.initLos(message);
+  world.initLos();
 };
 
 module.exports = configMessage;

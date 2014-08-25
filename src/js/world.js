@@ -1,38 +1,43 @@
 var scene = require('./scene'),
-    models = require('./models');
+    models = require('./models'),
+    player = require('./player');
 
 var los;
 var items = {};
 
-var initLos = function (data) {
-  console.log(config.LOS_Z * config.CHUNK_Z);
-  los = new Array(config.LOS_Z * config.CHUNK_Z);
-  for (var z = 0; z < config.LOS_Z * config.CHUNK_Z; z ++) {
-    los[z] = new Array(config.LOS_X * config.CHUNK_X);
-    for (var y = 0; y < config.LOS_Y * config.CHUNK_Y; y ++) {
-      los[z][y] = new Array(config.LOS_Y * config.CHUNK_Y);
-    }
-  }
-};
-
-var renderAll = function (chunks) {
+var initLos = function () {
+  los = new Array(config.LOS_Z);
   for (var z = 0; z < config.LOS_Z; z++) {
+    los[z] = new Array(config.LOS_X);
     for (var x = 0; x < config.LOS_X; x++) {
-      //var chunk = chunks[z][x];
-      //var wcZ = chunk.coords[0];
-      //var wcX = chunk.coords[1];
-      renderChunk(z, x, chunks[z][x]);
+      los[z][x] = new Array(config.CHUNK_Z);
+      for (var cz = 0; cz < config.CHUNK_Z; cz++) {
+        los[z][x][cz] = new Array(config.CHUNK_X);
+      }
     }
   }
 };
 
-var render = function () {
-};
+var renderChunk = function (coords, chunk) {
+  var cz = coords[0];
+  var cx = coords[1];
 
-var renderChunk = function (z, x, chunk) {
-  //z, x are los, i.e. los 3,3 [[0,0],[0,1]...[2,2]]
-  var offsetZ = (z - Math.floor(config.LOS_Z / 2)) * config.CHUNK_Z * config.TILE_HEIGHT;
-  var offsetX = (x - Math.floor(config.LOS_X / 2)) * config.CHUNK_X * config.TILE_WIDTH;
+  var p = player.getPlayer();
+
+  var playerRelativeCoordsZ = cz - p.cz;
+  var playerRelativeCoordsX = cx - p.cx;
+
+  var halfLosZ = Math.floor(config.LOS_Z / 2);
+  var halfLosX = Math.floor(config.LOS_X / 2);
+  
+  var losArrayCoordsZ = playerRelativeCoordsZ + halfLosZ;
+  var losArrayCoordsX = playerRelativeCoordsX + halfLosX;
+
+  var offsetChunkZ = cz - halfLosZ;
+  var offsetChunkX = cx - halfLosX;
+
+  var offsetZ = offsetChunkZ * config.CHUNK_Z * config.TILE_HEIGHT;
+  var offsetX = offsetChunkX * config.CHUNK_X * config.TILE_WIDTH;
 
   for (var i = 0; i < config.CHUNK_Z; i++) {
     for (var j = 0; j < config.CHUNK_X; j++) {
@@ -42,13 +47,13 @@ var renderChunk = function (z, x, chunk) {
       var sceneZ = cubeZ + offsetZ;
       var sceneX = cubeX + offsetX;
 
-      var cube = los[z][x][i][j];
+      var cube = los[losArrayCoordsZ][losArrayCoordsX][i][j];
 
       if (cube === undefined) {
-        var tileType = chunk.m[i][j];
+        var tileType = chunk[i][j];
         var drawFunction = models.meshFunctions[tileType];
         cube = drawFunction();
-        los[z][x][i][j] = cube;
+        los[losArrayCoordsZ][losArrayCoordsX][i][j] = cube;
         scene.add(cube);
       }
 
@@ -85,6 +90,6 @@ var renderItem = function (id, z, x, cz, cx, materialType) {
 
 module.exports = {
   initLos: initLos,
-  renderAll: renderAll,
+  renderChunk: renderChunk,
   renderItem: renderItem,
 };

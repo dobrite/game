@@ -50,9 +50,9 @@ func (h *Handler) handle(transport transport) {
 
 	reg.add(session)
 	reg.send(session, buildMessageConfig())
-	reg.send(session, buildMessageWorld(initialCoords))
 	reg.send(session, buildMessageSpawn(id))
 	reg.publish(session, buildMessageItem(id))
+	sendLos(session, initialCoords)
 
 	log.Printf("client connected: %s", id)
 

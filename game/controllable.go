@@ -13,7 +13,9 @@ func (c *controllable) init() {
 
 func (c *controllable) enqueue(id string, msg messageMove) {
 	c.queue[id] = func() {
-		d.getPosition(id).move(msg.Z, msg.X)
+		p := d.getPosition(id)
+		p.move(msg.Z, msg.X)
+		d.setPosition(p)
 		reg.broadcast(buildMessageItem(id))
 	}
 }
