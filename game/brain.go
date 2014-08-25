@@ -37,15 +37,20 @@ func (db *db) allBrains() []brain {
 	return brains
 }
 
-func randomBrain(delay int) func(*position) {
-	return func(p *position) {
+func randomBrain(delay int) func(id string) bool {
+	return func(id string) bool {
 		if trashD(delay) == 0 {
+			p := d.getPosition(id)
 			p.move(trashD(3)-1, trashD(3)-1)
 			d.setPosition(p)
+			return true
 		}
+		return false
 	}
 }
 
-func rockBrain() func(*position) {
-	return func(p *position) {}
+func rockBrain() func(id string) bool {
+	return func(id string) bool {
+		return false
+	}
 }
