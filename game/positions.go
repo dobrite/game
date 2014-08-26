@@ -37,7 +37,7 @@ func (db *db) getPosition(id string) *position {
 }
 
 func (db *db) setPosition(p *position) {
-	d.dbmap.Insert(p)
+	d.dbmap.Update(p)
 }
 
 func (p *position) toWorldCoords() *worldCoords {
