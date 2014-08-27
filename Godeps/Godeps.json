@@ -7,6 +7,11 @@
 			"Rev": "d895b7d4e840c1048395df986ca797bea46bb2c8"
 		},
 		{
+			"ImportPath": "github.com/coopernurse/gorp",
+			"Comment": "v1.6.1",
+			"Rev": "31a7c02fabe8965c887cd243e381ce08328f3741"
+		},
+		{
 			"ImportPath": "github.com/deckarep/golang-set",
 			"Comment": "v1-13-g1c20f6c",
 			"Rev": "1c20f6c39d1c7c430e2f8ba9b323770930b01528"
@@ -16,18 +21,13 @@
 			"Rev": "0f32413e5e853a1244bc7be242b9afb625dc0aee"
 		},
 		{
-			"ImportPath": "github.com/jmoiron/modl",
-			"Rev": "1e84595868c530a1329a38ba9eae34771b72dda1"
-		},
-		{
-			"ImportPath": "github.com/jmoiron/sqlx",
-			"Comment": "sqlx-v1.0-35-g8107368",
-			"Rev": "810736815fdfdd875565bd2761e9a8ae3d4a7bbb"
-		},
-		{
 			"ImportPath": "github.com/kylelemons/go-gypsy/yaml",
 			"Comment": "go.weekly.2011-11-02-17-g0ddb27c",
 			"Rev": "0ddb27ce74ade2ca988ec85587d636e10312dfc6"
+		},
+		{
+			"ImportPath": "github.com/larspensjo/Go-simplex-noise/simplexnoise",
+			"Rev": "bfdcb9fc4b93d2ee6e6091f8ff5e384737c36efa"
 		},
 		{
 			"ImportPath": "github.com/lib/pq",
