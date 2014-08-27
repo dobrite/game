@@ -32,7 +32,6 @@ func (db *db) getPosition(id string) *position {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(obj.(*position))
 	return obj.(*position)
 }
 
