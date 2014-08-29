@@ -69,14 +69,31 @@ func (ssc *sqlStraightChunk) ddChunk() {
 }
 
 func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
-	row := d.dbmap.Db.QueryRow(`SELECT array_agg(material_type)
-	    FROM materials WHERE id IN
-		(SELECT id FROM positions WHERE
-			cz = $1 AND
-			cx = $2 AND
-			cy = 4
-			ORDER BY x,z,y)
-        and material_type in (2,3)`, cc[0], cc[1])
+	row := d.dbmap.Db.QueryRow(`
+    SELECT array_agg(material_type)
+    FROM
+      (SELECT
+        (CASE
+          WHEN positions.id IS NULL
+            THEN 0
+            ELSE materials.material_type
+          END)
+      FROM positions
+      LEFT JOIN materials
+        ON positions.id = materials.id
+        OR positions.id IS NULL
+      RIGHT JOIN tempers
+        ON positions.z   = tempers.z
+        AND positions.x  = tempers.x
+        AND positions.y  = tempers.y
+        AND positions.cz = $1
+        AND positions.cx = $2
+        AND positions.cy = 4
+        AND materials.material_type IN (2, 3)
+      ORDER BY tempers.y,
+               tempers.z,
+               tempers.x
+      ) as t;`, cc[0], cc[1])
 	var b []byte
 	err := row.Scan(&b)
 	switch {
