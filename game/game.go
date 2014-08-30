@@ -74,8 +74,8 @@ func (g *Game) Init(dbmap *gorp.DbMap) {
 	// regionSeed = worldSeed * (regionX * 256*256 + regionY)
 
 	// TODO need a metadata game table so we know when we've genned spawn
-	//g.populate()
-	//w.init()
+	g.populate()
+	w.init()
 
 	reg = newRegistry()
 

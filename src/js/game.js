@@ -3,7 +3,8 @@ var camera = require('./camera'),
     kd = require('./keyboard'),
     scene = require('./scene'),
     lighting = require('./lighting'),
-    renderer = require('./renderer');
+    renderer = require('./renderer'),
+    updateSun = require('./ui').updateSun;
 
 var aspect = window.innerWidth / window.innerHeight;
 
@@ -27,13 +28,17 @@ scene.add(gridHelper);
 //var ch = new THREE.CameraHelper(camera);
 //scene.add(ch);
 
+scene.add(lighting);
+
 function start () {
   function animate() {
     kd.tick();
     requestAnimationFrame(animate);
-    //var timer = Date.now() * 0.0001;
+    var timer = Date.now() * 0.0001;
 
-    //camera.position.x = Math.cos(timer) * 200;
+    //lighting.position.z += 0.00005;
+    //lighting.position.x += 0.0001;
+    updateSun(lighting);
     //camera.position.z = Math.sin(timer) * 200;
     //camera.position.y = Math.tan(timer) * 200;
     //camera.lookAt(scene.position);
