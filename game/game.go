@@ -71,6 +71,7 @@ func (g *Game) Init(dbmap *gorp.DbMap) {
 	log.Printf("Starting server with seed: %s", seed)
 	rand.Seed(seed)
 	trashRand = rand.New(rand.NewSource(rand.Int63()))
+	// regionSeed = worldSeed * (regionX * 256*256 + regionY)
 
 	// TODO need a metadata game table so we know when we've genned spawn
 	g.populate()

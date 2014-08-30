@@ -34,8 +34,16 @@ func makeChunk(cz int, cx int, cy int) {
 		for x := 0; x < chunkX; x++ {
 			// "tile"
 			id := d.newUUID()
-			d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
-			d.addMaterial(id, materialType(die(2)+2))
+			y := die(2)
+			if y == 1 {
+				d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
+				d.addMaterial(id, 2)
+				d.addPosition(id, z, x, 1, cz, cx, defaultDepth/chunkY)
+				d.addMaterial(id, materialType(die(2)+2))
+			} else {
+				d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
+				d.addMaterial(id, materialType(die(2)+2))
+			}
 		}
 	}
 }
