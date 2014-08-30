@@ -44,10 +44,18 @@ func Up_20140816162235(txn *sql.Tx) {
 	);`)
 
 	txn.Exec(`CREATE INDEX controlled_id_fkey_idx ON controlled (id);`)
+
+	txn.Exec(`CREATE UNLOGGED TABLE empty_chunk
+      AS SELECT z, x, y
+      FROM generate_series(0, 15) AS z,
+           generate_series(0, 15) AS x,
+           generate_series(0, 15) as y
+    ;`)
 }
 
 // Down is executed when this migration is rolled back
 func Down_20140816162235(txn *sql.Tx) {
+	txn.Exec("DROP TABLE empty_chunk;")
 	txn.Exec("DROP TABLE controlled;")
 	txn.Exec("DROP TABLE brains;")
 	txn.Exec("DROP TABLE positions;")

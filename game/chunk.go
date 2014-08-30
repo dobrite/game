@@ -38,6 +38,7 @@ func makeChunk(cz int, cx int, cy int) {
 			if y == 1 {
 				d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
 				d.addMaterial(id, 2)
+				id := d.newUUID()
 				d.addPosition(id, z, x, 1, cz, cx, defaultDepth/chunkY)
 				d.addMaterial(id, materialType(die(2)+2))
 			} else {
@@ -80,28 +81,28 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
 	row := d.dbmap.Db.QueryRow(`
     SELECT array_agg(material_type)
     FROM
-      (SELECT
-        (CASE
-          WHEN positions.id IS NULL
-            THEN 0
-            ELSE materials.material_type
-          END)
-      FROM positions
-      LEFT JOIN materials
-        ON positions.id = materials.id
-        OR positions.id IS NULL
-      RIGHT JOIN tempers
-        ON positions.z   = tempers.z
-        AND positions.x  = tempers.x
-        AND positions.y  = tempers.y
-        AND positions.cz = $1
-        AND positions.cx = $2
-        AND positions.cy = 4
-        AND materials.material_type IN (2, 3)
-      ORDER BY tempers.y,
-               tempers.z,
-               tempers.x
-      ) as t;`, cc[0], cc[1])
+    (SELECT
+      (CASE
+        WHEN positions.id IS NULL
+        THEN 0
+        ELSE materials.material_type
+      END)
+    FROM positions
+    LEFT JOIN materials
+      ON (positions.id = materials.id
+      OR positions.id IS NULL)
+      AND materials.material_type IN (2, 3)
+    RIGHT JOIN empty_chunk
+      ON  positions.z  = empty_chunk.z
+      AND positions.x  = empty_chunk.x
+      AND positions.y  = empty_chunk.y
+      AND positions.cz = 0
+      AND positions.cx = 0
+      AND positions.cy = 4
+    ORDER BY empty_chunk.y,
+             empty_chunk.z,
+             empty_chunk.x
+) as t;`, cc[0], cc[1])
 	var b []byte
 	err := row.Scan(&b)
 	switch {
