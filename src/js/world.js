@@ -5,14 +5,21 @@ var scene = require('./scene'),
 var los;
 var items = {};
 
+// lol
 var initLos = function () {
   los = new Array(config.LOS_Z);
   for (var z = 0; z < config.LOS_Z; z++) {
     los[z] = new Array(config.LOS_X);
     for (var x = 0; x < config.LOS_X; x++) {
-      los[z][x] = new Array(config.CHUNK_Z);
-      for (var cz = 0; cz < config.CHUNK_Z; cz++) {
-        los[z][x][cz] = new Array(config.CHUNK_X);
+      los[z][x] = new Array(config.LOS_Y);
+      for (var y = 0; y < config.LOS_Y; y++) {
+        los[z][x][y] = new Array(config.CHUNK_Z);
+        for (var cz = 0; cz < config.CHUNK_Z; cz++) {
+          los[z][x][y][cz] = new Array(config.CHUNK_X);
+          for (var cx = 0; cx < config.CHUNK_X; cx++) {
+            los[z][x][y][cz][cx] = new Array(config.CHUNK_Y);
+          }
+        }
       }
     }
   }
@@ -21,6 +28,7 @@ var initLos = function () {
 var renderChunk = function (coords, chunk) {
   var cz = coords[0];
   var cx = coords[1];
+  //var cy = coords[2];
 
   var p = player.getPlayer();
 
@@ -38,27 +46,38 @@ var renderChunk = function (coords, chunk) {
 
   var offsetZ = offsetChunkZ * config.CHUNK_Z * config.TILE_HEIGHT;
   var offsetX = offsetChunkX * config.CHUNK_X * config.TILE_WIDTH;
+  var offsetY = 0;//offsetChunkX * config.CHUNK_X * config.TILE_WIDTH;
 
-  for (var i = 0; i < config.CHUNK_Z; i++) {
-    for (var j = 0; j < config.CHUNK_X; j++) {
-      var cubeZ = i * config.TILE_HEIGHT;
-      var cubeX = j * config.TILE_WIDTH;
+  for (var k = 0; k < config.CHUNK_Y; k++) {
+    for (var i = 0; i < config.CHUNK_Z; i++) {
+      for (var j = 0; j < config.CHUNK_X; j++) {
+        var cubeZ = i * config.TILE_DEPTH;
+        var cubeX = j * config.TILE_WIDTH;
+        var cubeY = k * config.TILE_HEIGHT;
 
-      var sceneZ = cubeZ + offsetZ;
-      var sceneX = cubeX + offsetX;
+        var sceneZ = cubeZ + offsetZ;
+        var sceneX = cubeX + offsetX;
+        var sceneY = cubeY + offsetY;
 
-      var cube = los[losArrayCoordsZ][losArrayCoordsX][i][j];
+        // really needs to be worldHeight / chunkY
+        var cube = los[losArrayCoordsZ][losArrayCoordsX][0][k][i][j];
 
-      if (cube === undefined) {
-        var tileType = chunk[i][j];
-        var drawFunction = models.meshFunctions[tileType];
-        cube = drawFunction();
-        los[losArrayCoordsZ][losArrayCoordsX][i][j] = cube;
-        scene.add(cube);
+        if (cube === undefined) {
+          var tileType = chunk[k][i][j];
+          var drawFunction = models.meshFunctions[tileType];
+          cube = drawFunction();
+          if (cube !== undefined) {
+            los[losArrayCoordsZ][losArrayCoordsX][0][k][i][j] = cube;
+            scene.add(cube);
+          }
+        }
+
+        if (cube !== undefined) {
+          cube.position.z = sceneZ + config.TILE_DEPTH / 2;
+          cube.position.x = sceneX + config.TILE_WIDTH / 2;
+          cube.position.y = sceneY;
+        }
       }
-
-      cube.position.z = sceneZ + config.TILE_DEPTH / 2;
-      cube.position.x = sceneX + config.TILE_WIDTH / 2;
     }
   }
 };

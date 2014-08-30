@@ -33,7 +33,7 @@ func sendLos(session *session, cc chunkCoords) {
 	offsetX := div2(losX)
 	for z := 0; z < losZ; z++ {
 		for x := 0; x < losX; x++ {
-			cc := chunkCoords{cc[0] + z - offsetZ, cc[1] + x - offsetX}
+			cc := chunkCoords{cc[0] + z - offsetZ, cc[1] + x - offsetX, defaultDepth / chunkY}
 			reg.send(session, buildMessageChunk(cc))
 		}
 	}
