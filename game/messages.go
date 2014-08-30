@@ -48,9 +48,9 @@ func buildMessageConfig() string {
 }
 
 type messageChunk struct {
-	Event     string           `json:"event"`
-	Coords    chunkCoords      `json:"coords"`
-	Materials [][]materialType `json:"materials"`
+	Event     string             `json:"event"`
+	Coords    chunkCoords        `json:"coords"`
+	Materials [][][]materialType `json:"materials"`
 }
 
 func buildMessageChunk(cc chunkCoords) string {

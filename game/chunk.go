@@ -9,7 +9,7 @@ import (
 
 type sqlStraightChunk struct {
 	Arr  []materialType
-	Grid [][]materialType
+	Grid [][][]materialType
 	sql.Scanner
 }
 
@@ -19,7 +19,7 @@ func (c *chunkCoords) toJSON() *messageChunk {
 	var s *sqlStraightChunk
 	ssc := s.New()
 	ssc.straightChunk(*c)
-	ssc.ddChunk()
+	ssc.dddChunk()
 
 	return &messageChunk{
 		Event:     "game:chunk",
@@ -52,7 +52,7 @@ func makeChunk(cz int, cx int, cy int) {
 func (ssc *sqlStraightChunk) New() *sqlStraightChunk {
 	return &sqlStraightChunk{
 		Arr:  make([]materialType, chunkZ*chunkX*chunkY),
-		Grid: make([][]materialType, chunkZ),
+		Grid: make([][][]materialType, chunkY),
 	}
 }
 
@@ -68,12 +68,13 @@ func (ssc *sqlStraightChunk) Convert(str string) error {
 	return nil
 }
 
-func (ssc *sqlStraightChunk) ddChunk() {
+func (ssc *sqlStraightChunk) dddChunk() {
+	// z -> x -> y
 	for z := range ssc.Grid {
-		ssc.Grid[z] = ssc.Arr[z*chunkX : (z+1)*chunkX]
-		//for x := range ssc.Grid[z] {
-		//ssc.Grid[z][x] = ssc.Arr[z*chunkZ+x]
-		//}
+		ssc.Grid[z] = make([][]materialType, chunkX)
+		for x := range ssc.Grid[z] {
+			ssc.Grid[z][x] = ssc.Arr[(z*chunkZ*chunkX)+(x*chunkX) : (z*chunkZ*chunkX)+((x+1)*chunkX)]
+		}
 	}
 }
 
@@ -100,8 +101,8 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
       AND positions.cx = $2
       AND positions.cy = 4
     ORDER BY empty_chunk.y,
-             empty_chunk.z,
-             empty_chunk.x
+             empty_chunk.x,
+             empty_chunk.z
   ) as t;`, cc[0], cc[1])
 	var b []byte
 	err := row.Scan(&b)
