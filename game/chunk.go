@@ -51,7 +51,7 @@ func makeChunk(cz int, cx int, cy int) {
 
 func (ssc *sqlStraightChunk) New() *sqlStraightChunk {
 	return &sqlStraightChunk{
-		Arr:  make([]materialType, chunkZ*chunkX),
+		Arr:  make([]materialType, chunkZ*chunkX*chunkY),
 		Grid: make([][]materialType, chunkZ),
 	}
 }
@@ -88,7 +88,7 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
         ELSE materials.material_type
       END)
     FROM positions
-    LEFT JOIN materials
+    JOIN materials
       ON (positions.id = materials.id
       OR positions.id IS NULL)
       AND materials.material_type IN (2, 3)
