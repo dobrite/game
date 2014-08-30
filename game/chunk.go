@@ -96,13 +96,13 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
       ON  positions.z  = empty_chunk.z
       AND positions.x  = empty_chunk.x
       AND positions.y  = empty_chunk.y
-      AND positions.cz = 0
-      AND positions.cx = 0
+      AND positions.cz = $1
+      AND positions.cx = $2
       AND positions.cy = 4
     ORDER BY empty_chunk.y,
              empty_chunk.z,
              empty_chunk.x
-) as t;`, cc[0], cc[1])
+  ) as t;`, cc[0], cc[1])
 	var b []byte
 	err := row.Scan(&b)
 	switch {
