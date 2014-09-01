@@ -51,10 +51,18 @@ func Up_20140816162235(txn *sql.Tx) {
            generate_series(0, 15) AS x,
            generate_series(0, 15) as y
     ;`)
+
+	txn.Exec(`CREATE UNLOGGED TABLE empty_chunk_column
+      AS SELECT z, x, y
+      FROM generate_series(0, 15) AS z,
+           generate_series(0, 15) AS x,
+           generate_series(0, 255) as y
+    ;`)
 }
 
 // Down is executed when this migration is rolled back
 func Down_20140816162235(txn *sql.Tx) {
+	txn.Exec("DROP TABLE empty_chunk_column;")
 	txn.Exec("DROP TABLE empty_chunk;")
 	txn.Exec("DROP TABLE controlled;")
 	txn.Exec("DROP TABLE brains;")
