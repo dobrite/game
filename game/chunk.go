@@ -34,17 +34,10 @@ func makeChunk(cz int, cx int, cy int) {
 		for x := 0; x < chunkX; x++ {
 			// "tile"
 			id := d.newUUID()
-			y := die(4)
-			if y == 1 {
-				d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
-				d.addMaterial(id, 2)
-				id := d.newUUID()
-				d.addPosition(id, z, x, 1, cz, cx, defaultDepth/chunkY)
-				d.addMaterial(id, materialType(die(2)+2))
-			} else {
-				d.addPosition(id, z, x, 0, cz, cx, defaultDepth/chunkY)
-				d.addMaterial(id, materialType(die(2)+2))
-			}
+			h := getSimplexFBM(float64((cz*chunkZ)+z)/5000.0, float64((cx*chunkX)+x)/5000.0, 128, 2.0)
+			i := int(((1 + h) / 2) * 255)
+			d.addPosition(id, z, x, i-102, cz, cx, defaultDepth/chunkY)
+			d.addMaterial(id, 2)
 		}
 	}
 }
