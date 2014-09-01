@@ -28,59 +28,47 @@ func noise3(x, y, z float64) float64 {
 	return simplexnoise.Noise3(x, y, z)
 }
 
-//func main() {
-//	pixels := Pic(dx, dy)
-//	pixels = setMinToZero(pixels)
-//	img := Create(pixels)
-//	WriteImage("img.jpg", img)
-//}
-
-func setMinToZero(pixels [][]uint8) [][]uint8 {
-	min := uint8(255)
-	for y := range pixels {
-		for x := range pixels[y] {
-			if pixels[y][x] < min {
-				min = pixels[y][x]
-			}
-
-		}
-	}
-	for y := range pixels {
-		for x := range pixels[y] {
-			pixels[y][x] = pixels[y][x] - min
-		}
-	}
-	return pixels
+// clamp -1.0 to 1.0
+func clamp(val float64) float64 {
+	return math.Max(-1, math.Min(1, val))
 }
 
-func getSimplexFBM(x, y float64, octaves int, lacunarity float64) float64 {
-	result := 0.0
-	f := 1.0
-	var exponents [129]float64
-
-	for i := 0; i <= octaves; i++ {
-		exponents[i] = 1.0 / f
-		f *= lacunarity
-		result += noise2(x, y) * exponents[i]
-		x *= lacunarity
-		y *= lacunarity
-	}
-
-	// clamp -1.0 to 1.0
-	ret := math.Max(-1, math.Min(1, result))
-	return ret
+// convert to between 0 and 1
+func scaleToOne(val float64) float64 {
+	return (1 + val) / 2
 }
 
-func gen2DSimplexFBM(dx, dy int) [][]uint8 {
+func getSimplexFBM2(scale, lacunarity, exp float64, octaves int) func(float64, float64) float64 {
+	return func(x, y float64) float64 {
+		scaledx := x / scale
+		scaledy := y / scale
+		result := 0.0
+
+		for i := 0; i <= octaves; i++ {
+			exponent := 1.0 / exp
+			exp *= lacunarity
+			result += noise2(scaledx, scaledy) * exponent
+			x *= lacunarity
+			y *= lacunarity
+		}
+
+		return result
+	}
+}
+
+func getHeightmap2(val float64) uint8 {
+	val = clamp(val)
+	val = scaleToOne(val)
+	return uint8(val * 255)
+}
+
+func genSimplexFBM2(dx, dy int) [][]uint8 {
+	simplexFBM2 := getSimplexFBM2(5000.0, 2.0, 1.0, 128)
 	pixels := make([][]uint8, dy)
 	for y := 0; y < dy; y++ {
 		pixels[y] = make([]uint8, dx)
 		for x := 0; x < dx; x++ {
-			scaledx := float64(x) / scale
-			scaledy := float64(y) / scale
-			val := getSimplexFBM(scaledx, scaledy, octaves, lacunarity)
-			val = (1 + val) / 2
-			pixels[y][x] = uint8(val * 255)
+			pixels[y][x] = getHeightmap2(simplexFBM2(float64(x), float64(y)))
 		}
 	}
 	return pixels
@@ -101,8 +89,8 @@ func createImage(data [][]uint8) image.Image {
 	return m
 }
 
-func writeImage(n string, m image.Image) {
-	f, err := os.OpenFile(n, os.O_CREATE|os.O_WRONLY, 0666)
+func writeImage(filename string, m image.Image) {
+	f, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		panic(err)
 	}
