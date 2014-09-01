@@ -3,6 +3,7 @@ package game
 import (
 	"database/sql"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -28,14 +29,17 @@ func (c *chunkCoords) toJSON() *messageChunk {
 	}
 }
 
-func makeChunk(cz int, cx int, cy int) {
-	log.Printf("Making chunk: %d, %d, %d", cz, cx, cy)
+func makeChunk(cz, cx int) {
+	log.Printf("Making chunk: %d, %d", cz, cx)
 	for z := 0; z < chunkZ; z++ {
 		for x := 0; x < chunkX; x++ {
 			// "tile"
 			id := d.newUUID()
 			n := noise.simplexFBM2(float64((cz*chunkZ)+z), float64((cx*chunkX)+x))
-			d.addPosition(id, z, x, int(getHeightmap2(n)), cz, cx, defaultDepth/chunkY)
+			y := int(getHeightmap2(n))
+			cy := y / chunkY
+			y = int(math.Mod(float64(y), chunkY))
+			d.addPosition(id, z, x, y, cz, cx, cy)
 			d.addMaterial(id, 2)
 		}
 	}
@@ -93,8 +97,8 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
       AND positions.cx = $2
       AND positions.cy = $3
     ORDER BY empty_chunk.y,
-             empty_chunk.x,
-             empty_chunk.z
+             empty_chunk.z,
+             empty_chunk.x
   ) as t;`, cc[0], cc[1], cc[2])
 	var b []byte
 	err := row.Scan(&b)

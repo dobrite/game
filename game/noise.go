@@ -24,7 +24,7 @@ var noise *noiseFuncs
 
 func init() {
 	noise = &noiseFuncs{
-		simplexFBM2: getSimplexFBM2(5000.0, 2.0, 1.0, 128),
+		simplexFBM2: getSimplexFBM2(2500.0, 2.0, 1.0, 128),
 	}
 }
 
@@ -52,13 +52,14 @@ func scaleToOne(val float64) float64 {
 
 func getSimplexFBM2(scale, lacunarity, exp float64, octaves int) func(float64, float64) float64 {
 	return func(x, y float64) float64 {
+		expCopy := exp
 		scaledx := x / scale
 		scaledy := y / scale
 		result := 0.0
 
 		for i := 0; i <= octaves; i++ {
-			exponent := 1.0 / exp
-			exp *= lacunarity
+			exponent := 1.0 / expCopy
+			expCopy *= lacunarity
 			result += noise2(scaledx, scaledy) * exponent
 			x *= lacunarity
 			y *= lacunarity

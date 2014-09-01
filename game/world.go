@@ -25,7 +25,7 @@ func (w *world) buildSpawn(spawnZ, spawnX int) {
 
 	for z := 0; z < spawnZ; z++ {
 		for x := 0; x < spawnX; x++ {
-			makeChunk(z-offsetZ, x-offsetX, defaultDepth/chunkY)
+			makeChunk(z-offsetZ, x-offsetX)
 		}
 	}
 }
@@ -35,8 +35,11 @@ func sendLos(session *session, cc chunkCoords) {
 	offsetX := div2(losX)
 	for z := 0; z < losZ; z++ {
 		for x := 0; x < losX; x++ {
-			cc := chunkCoords{cc[0] + z - offsetZ, cc[1] + x - offsetX, defaultDepth / chunkY}
-			reg.send(session, buildMessageChunk(cc))
+			for y := 0; y < losY; y++ {
+				// TODO FIXME
+				cc := chunkCoords{cc[0] + z - offsetZ, cc[1] + x - offsetX, y}
+				reg.send(session, buildMessageChunk(cc))
+			}
 		}
 	}
 }

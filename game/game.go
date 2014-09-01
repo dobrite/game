@@ -30,37 +30,37 @@ func pump() {
 	}
 }
 
-func (g *Game) populate() {
-	id := d.newUUID()
-	d.addPosition(id, 0, 0, 0, 0, 0, defaultDepth/chunkY)
-	d.addMaterial(id, cow)
-	d.addBrain(id, random)
-
-	id = d.newUUID()
-	d.addPosition(id, 0, 0, 0, 2, 1, defaultDepth/chunkY)
-	d.addMaterial(id, pig)
-	d.addBrain(id, random)
-
-	id = d.newUUID()
-	d.addPosition(id, 0, 0, 0, 0, 0, defaultDepth/chunkY)
-	d.addMaterial(id, stone)
-	d.addBrain(id, rock)
-
-	id = d.newUUID()
-	d.addPosition(id, 0, 0, 0, 1, 1, defaultDepth/chunkY)
-	d.addMaterial(id, stone)
-	d.addBrain(id, rock)
-
-	id = d.newUUID()
-	d.addPosition(id, 0, 0, 0, 0, 1, defaultDepth/chunkY)
-	d.addMaterial(id, stone)
-	d.addBrain(id, rock)
-
-	id = d.newUUID()
-	d.addPosition(id, 0, 0, 0, 1, 0, defaultDepth/chunkY)
-	d.addMaterial(id, stone)
-	d.addBrain(id, rock)
-}
+//func (g *Game) populate() {
+//	id := d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 0, 0, defaultDepth/chunkY)
+//	d.addMaterial(id, cow)
+//	d.addBrain(id, random)
+//
+//	id = d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 2, 1, defaultDepth/chunkY)
+//	d.addMaterial(id, pig)
+//	d.addBrain(id, random)
+//
+//	id = d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 0, 0, defaultDepth/chunkY)
+//	d.addMaterial(id, stone)
+//	d.addBrain(id, rock)
+//
+//	id = d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 1, 1, defaultDepth/chunkY)
+//	d.addMaterial(id, stone)
+//	d.addBrain(id, rock)
+//
+//	id = d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 0, 1, defaultDepth/chunkY)
+//	d.addMaterial(id, stone)
+//	d.addBrain(id, rock)
+//
+//	id = d.newUUID()
+//	d.addPosition(id, 0, 0, 0, 1, 0, defaultDepth/chunkY)
+//	d.addMaterial(id, stone)
+//	d.addBrain(id, rock)
+//}
 
 func (g *Game) Init(dbmap *gorp.DbMap) {
 	d = &db{
@@ -74,7 +74,7 @@ func (g *Game) Init(dbmap *gorp.DbMap) {
 	// regionSeed = worldSeed * (regionX * 256*256 + regionY)
 
 	// TODO need a metadata game table so we know when we've genned spawn
-	g.populate()
+	//g.populate()
 	w.init()
 
 	reg = newRegistry()

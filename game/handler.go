@@ -41,7 +41,8 @@ func (h *Handler) handle(transport transport) {
 	toConn := make(chan string)
 
 	id := d.newUUID()
-	initialCoords := chunkCoords{0, 0, defaultDepth / chunkY}
+	// FIXME
+	initialCoords := chunkCoords{0, 0, 4}
 	d.addPosition(id, 0, 0, 0, initialCoords[0], initialCoords[1], initialCoords[2])
 	d.addMaterial(id, flesh)
 	d.addControlled(id)

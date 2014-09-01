@@ -1,28 +1,35 @@
 var config = require('./config');
 
 var aspect = window.innerWidth / window.innerHeight;
-var d = 2028;
+var d = 6000;
 
-//var camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
+var camera = new THREE.OrthographicCamera(
+  - d * aspect,
+  d * aspect,
+  d,
+  - d,
+  -50000,
+  50000
+);
 //var camera = new THREE.OrthographicCamera(
 //  window.innerWidth / -2,
 //  window.innerWidth / 2,
 //  window.innerHeight / 2,
 //  window.innerHeight / -2,
-//  -2000,
-//  2000
+//  -50000,
+//  50000
 //);
 
-var camera = new THREE.OrthographicCamera(
-  d / -2 * aspect,
-  d / 2 * aspect,
-  d / 2,
-  d / -2,
-  -2000,
-  2000
-);
+//var camera = new THREE.OrthographicCamera(
+//  d / -2 * aspect,
+//  d / 2 * aspect,
+//  d / 2,
+//  d / -2,
+//  -50000,
+//  50000
+//);
 
-camera.position.set(200, 200, 200);
+camera.position.set(5000, 5000, 5000);
 //camera.rotation.order = 'YXZ';
 //camera.rotation.y = - Math.PI / 4;
 //camera.rotation.x = Math.atan( - 1 / Math.sqrt( 2 ) );

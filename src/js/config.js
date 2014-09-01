@@ -1,11 +1,12 @@
 var initConfig = function (data) {
-  window.config.LOS_Z = data.losZ; // how many chunks around player to render
-  window.config.LOS_X = data.losX; // how many chunks around player to render
-  // TODO should be worldHeight / chunkY
-  window.config.LOS_Y = data.losY; // how many chunks around player to render
-  window.config.CHUNK_Z = data.chunkZ; // tiles per chunk
-  window.config.CHUNK_X = data.chunkX; // tiles per chunk
-  window.config.CHUNK_Y = data.chunkY; // tiles per chunk
+  window.config.LOS_Z = data.los_z; // how many chunks around player to render
+  window.config.LOS_X = data.los_x; // how many chunks around player to render
+  window.config.LOS_Y = data.world_y / data.chunk_y; // how many chunks around player to render
+  window.config.CHUNK_Z = data.chunk_z; // tiles per chunk
+  window.config.CHUNK_X = data.chunk_x; // tiles per chunk
+  window.config.CHUNK_Y = data.chunk_y; // tiles per chunk
+  console.log(config.LOS_Y);
+  console.log(data.world_y, data.chunk_y);
 };
 
 window.config = {

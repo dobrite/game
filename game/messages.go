@@ -24,12 +24,13 @@ type messageMove struct {
 
 type messageConfig struct {
 	Event  string `json:"event"`
-	ChunkZ int    `json:"chunkZ"`
-	ChunkX int    `json:"chunkX"`
-	ChunkY int    `json:"chunkY"`
-	LosZ   int    `json:"losZ"`
-	LosX   int    `json:"losX"`
-	LosY   int    `json:"losY"`
+	ChunkZ int    `json:"chunk_z"`
+	ChunkX int    `json:"chunk_x"`
+	ChunkY int    `json:"chunk_y"`
+	LosZ   int    `json:"los_z"`
+	LosX   int    `json:"los_x"`
+	LosY   int    `json:"los_y"`
+	WorldY int    `json:"world_y"`
 	Id     string `json:"id"`
 }
 
@@ -42,6 +43,7 @@ func buildMessageConfig() string {
 		LosZ:   losZ,
 		LosX:   losX,
 		LosY:   losY,
+		WorldY: worldY,
 	}
 	c, _ := json.Marshal(wc)
 	return string(c)

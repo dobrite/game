@@ -28,7 +28,7 @@ var initLos = function () {
 var renderChunk = function (coords, chunk) {
   var cz = coords[0];
   var cx = coords[1];
-  //var cy = coords[2];
+  var cy = coords[2];
 
   var p = player.getPlayer();
 
@@ -37,16 +37,16 @@ var renderChunk = function (coords, chunk) {
 
   var halfLosZ = Math.floor(config.LOS_Z / 2);
   var halfLosX = Math.floor(config.LOS_X / 2);
-  
+
   var losArrayCoordsZ = playerRelativeCoordsZ + halfLosZ;
   var losArrayCoordsX = playerRelativeCoordsX + halfLosX;
 
   var offsetChunkZ = cz - halfLosZ;
   var offsetChunkX = cx - halfLosX;
 
-  var offsetZ = offsetChunkZ * config.CHUNK_Z * config.TILE_HEIGHT;
+  var offsetZ = offsetChunkZ * config.CHUNK_Z * config.TILE_DEPTH;
   var offsetX = offsetChunkX * config.CHUNK_X * config.TILE_WIDTH;
-  var offsetY = 0;//offsetChunkX * config.CHUNK_X * config.TILE_WIDTH;
+  var offsetY = cy * config.CHUNK_Y * config.TILE_HEIGHT;
 
   for (var k = 0; k < config.CHUNK_Y; k++) {
     for (var i = 0; i < config.CHUNK_Z; i++) {
@@ -60,14 +60,14 @@ var renderChunk = function (coords, chunk) {
         var sceneY = cubeY + offsetY;
 
         // really needs to be worldHeight / chunkY
-        var cube = los[losArrayCoordsZ][losArrayCoordsX][0][k][i][j];
+        var cube = los[losArrayCoordsZ][losArrayCoordsX][cy][k][i][j];
 
         if (cube === undefined) {
           var tileType = chunk[k][i][j];
           var drawFunction = models.meshFunctions[tileType];
           cube = drawFunction();
           if (cube !== undefined) {
-            los[losArrayCoordsZ][losArrayCoordsX][0][k][i][j] = cube;
+            los[losArrayCoordsZ][losArrayCoordsX][cy][k][i][j] = cube;
             scene.add(cube);
           }
         }
