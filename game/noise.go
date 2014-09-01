@@ -16,6 +16,18 @@ const (
 	lacunarity = 2.0
 )
 
+type noiseFuncs struct {
+	simplexFBM2 func(float64, float64) float64
+}
+
+var noise *noiseFuncs
+
+func init() {
+	noise = &noiseFuncs{
+		simplexFBM2: getSimplexFBM2(5000.0, 2.0, 1.0, 128),
+	}
+}
+
 func noise1(x float64) float64 {
 	return simplexnoise.Noise1(x)
 }

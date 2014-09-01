@@ -1,6 +1,8 @@
 package game
 
-type world struct{}
+type world struct {
+	simplexFBM2 func(float64, float64) float64
+}
 
 type chunkJSON struct {
 	Event  string           `json:"event"`

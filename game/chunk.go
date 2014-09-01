@@ -34,9 +34,8 @@ func makeChunk(cz int, cx int, cy int) {
 		for x := 0; x < chunkX; x++ {
 			// "tile"
 			id := d.newUUID()
-			h := getSimplexFBM(float64((cz*chunkZ)+z)/5000.0, float64((cx*chunkX)+x)/5000.0, 128, 2.0)
-			i := int(((1 + h) / 2) * 255)
-			d.addPosition(id, z, x, i-102, cz, cx, defaultDepth/chunkY)
+			n := noise.simplexFBM2(float64((cz*chunkZ)+z), float64((cx*chunkX)+x))
+			d.addPosition(id, z, x, int(getHeightmap2(n)), cz, cx, defaultDepth/chunkY)
 			d.addMaterial(id, 2)
 		}
 	}
@@ -92,11 +91,11 @@ func (ssc *sqlStraightChunk) straightChunk(cc chunkCoords) {
       AND positions.y  = empty_chunk.y
       AND positions.cz = $1
       AND positions.cx = $2
-      AND positions.cy = 4
+      AND positions.cy = $3
     ORDER BY empty_chunk.y,
              empty_chunk.x,
              empty_chunk.z
-  ) as t;`, cc[0], cc[1])
+  ) as t;`, cc[0], cc[1], cc[2])
 	var b []byte
 	err := row.Scan(&b)
 	switch {
