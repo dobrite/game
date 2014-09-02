@@ -56,7 +56,7 @@ func Up_20140816162235(txn *sql.Tx) {
       AS SELECT z, x, y
       FROM generate_series(0, 15) AS z,
            generate_series(0, 15) AS x,
-           generate_series(0, 255) as y
+           generate_series(0, 64) as y
     ;`)
 }
 

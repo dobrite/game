@@ -24,7 +24,7 @@ var noise *noiseFuncs
 
 func init() {
 	noise = &noiseFuncs{
-		simplexFBM2: getSimplexFBM2(2500.0, 2.0, 1.0, 128),
+		simplexFBM2: getSimplexFBM2(5000.0, 2.0, 1.0, 32),
 	}
 }
 
@@ -72,7 +72,7 @@ func getSimplexFBM2(scale, lacunarity, exp float64, octaves int) func(float64, f
 func getHeightmap2(val float64) uint8 {
 	val = clamp(val)
 	val = scaleToOne(val)
-	return uint8(val * 255)
+	return uint8(val * (worldY - 1))
 }
 
 func genSimplexFBM2(dx, dy int) [][]uint8 {
