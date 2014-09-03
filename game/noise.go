@@ -8,14 +8,6 @@ import (
 	"os"
 )
 
-const (
-	dx         = 48
-	dy         = 48
-	scale      = 5000.0
-	octaves    = 128
-	lacunarity = 2.0
-)
-
 type noiseFuncs struct {
 	simplexFBM2 func(float64, float64) float64
 }
@@ -88,6 +80,8 @@ func genSimplexFBM2(dx, dy int) [][]uint8 {
 }
 
 func createImage(data [][]uint8) image.Image {
+	dy := len(data)
+	dx := len(data[dy])
 	m := image.NewRGBA(image.Rect(0, 0, dx, dy))
 	for y := 0; y < dy; y++ {
 		for x := 0; x < dx; x++ {
